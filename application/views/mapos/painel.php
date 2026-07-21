@@ -303,7 +303,7 @@
                 <div class="small-title">VISÃO CONSOLIDADA — GRUPO</div>
 
                 <div class="main-title">
-                    Dashboard Executivo
+                    Dashboard Executivo teste
                 </div>
 
                 <div class="subtitle">
