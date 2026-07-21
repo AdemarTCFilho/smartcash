@@ -16,6 +16,7 @@ class Clientes extends MY_Controller
 
         $this->load->model('clientes_model');
         $this->data['menuClientes'] = 'clientes';
+        $this->data['menuvClientes'] = 'Clientes';
     }
 
     public function index()
@@ -25,18 +26,16 @@ class Clientes extends MY_Controller
 
     public function gerenciar()
     {
-        if (!$this->permission->checkPermission($this->session->userdata('permissao'), 'vCliente')) {
+        if (!$this->permission->checkPermission($this->session->userdata('permissao'), 'vClientes')) {
             $this->session->set_flashdata('error', 'Você não tem permissão para visualizar clientes.');
             redirect(base_url());
         }
+
         $this->load->library('pagination');
 
-        $this->data['configuration']['base_url'] = site_url('clientes/gerenciar/');
-        $this->data['configuration']['total_rows'] = $this->clientes_model->count('clientes');
+        $this->data['configuration']['base_url'] = base_url() . 'index.php/clientes/gerenciar/';
 
         $this->pagination->initialize($this->data['configuration']);
-
-        $this->data['results'] = $this->clientes_model->get('clientes', '*', '', $this->data['configuration']['per_page'], $this->uri->segment(3));
 
         $this->data['view'] = 'clientes/clientes';
         return $this->layout();
@@ -44,7 +43,7 @@ class Clientes extends MY_Controller
 
     public function adicionar()
     {
-        if (!$this->permission->checkPermission($this->session->userdata('permissao'), 'aCliente')) {
+        if (!$this->permission->checkPermission($this->session->userdata('permissao'), 'aClientes')) {
             $this->session->set_flashdata('error', 'Você não tem permissão para adicionar clientes.');
             redirect(base_url());
         }
@@ -96,7 +95,7 @@ class Clientes extends MY_Controller
             redirect('mapos');
         }
 
-        if (!$this->permission->checkPermission($this->session->userdata('permissao'), 'eCliente')) {
+        if (!$this->permission->checkPermission($this->session->userdata('permissao'), 'eClientes')) {
             $this->session->set_flashdata('error', 'Você não tem permissão para editar clientes.');
             redirect(base_url());
         }
@@ -168,7 +167,7 @@ class Clientes extends MY_Controller
             redirect('mapos');
         }
 
-        if (!$this->permission->checkPermission($this->session->userdata('permissao'), 'vCliente')) {
+        if (!$this->permission->checkPermission($this->session->userdata('permissao'), 'vClientes')) {
             $this->session->set_flashdata('error', 'Você não tem permissão para visualizar clientes.');
             redirect(base_url());
         }
@@ -180,15 +179,107 @@ class Clientes extends MY_Controller
         return $this->layout();
     }
 
+    public function salvar()
+    {
+        $id = $this->input->post('id');
+        $nomeCliente = $this->input->post('nomeCliente');
+        $sexo = $this->input->post('sexo');
+        $documento = $this->input->post('documento');
+        $email = $this->input->post('email');
+
+        if (empty($nomeCliente) || empty($sexo) || empty($documento)) {
+            echo json_encode(['success' => false, 'message' => 'Nome, Sexo e Documento são obrigatórios.']);
+            return;
+        }
+
+        if (strlen($nomeCliente) > 255) {
+            echo json_encode(['success' => false, 'message' => 'Nome deve ter no máximo 255 caracteres.']);
+            return;
+        }
+
+        if (strlen($documento) > 20) {
+            echo json_encode(['success' => false, 'message' => 'Documento deve ter no máximo 20 caracteres.']);
+            return;
+        }
+
+        if (strlen($sexo) > 20) {
+            echo json_encode(['success' => false, 'message' => 'Sexo deve ter no máximo 20 caracteres.']);
+            return;
+        }
+
+        $status = $this->input->post('status') ? 1 : 0;
+
+        $data = [
+            'nomeCliente' => $nomeCliente,
+            'sexo' => $sexo,
+            'pessoa_fisica' => $this->input->post('pessoa_fisica') ? 1 : 0,
+            'documento' => $documento,
+            'status' => $status,
+            'telefone' => $this->input->post('telefone'),
+            'celular' => $this->input->post('celular'),
+            'rua' => $this->input->post('rua'),
+            'numero' => $this->input->post('numero'),
+            'bairro' => $this->input->post('bairro'),
+            'cidade' => $this->input->post('cidade'),
+            'estado' => $this->input->post('estado'),
+            'cep' => $this->input->post('cep'),
+            'contato' => $this->input->post('contato'),
+            'complemento' => $this->input->post('complemento'),
+            'fornecedor' => $this->input->post('fornecedor') ? 1 : 0,
+        ];
+
+        if (!empty($email)) {
+            if (strlen($email) > 100) {
+                echo json_encode(['success' => false, 'message' => 'Email deve ter no máximo 100 caracteres.']);
+                return;
+            }
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                echo json_encode(['success' => false, 'message' => 'Email inválido.']);
+                return;
+            }
+            $data['email'] = $email;
+        }
+
+        if ($id) {
+            $this->clientes_model->edit('clientes', $data, 'idClientes', $id);
+            echo json_encode(['success' => true, 'message' => 'Cliente atualizado com sucesso!']);
+        } else {
+            $data['dataCadastro'] = date('Y-m-d');
+            $this->clientes_model->add('clientes', $data);
+            echo json_encode(['success' => true, 'message' => 'Cliente cadastrado com sucesso!']);
+        }
+    }
+
+    public function listar()
+    {
+        $clientes = $this->clientes_model->getAllClientes();
+        echo json_encode(['data' => $clientes]);
+    }
+
+    public function getDados()
+    {
+        $id = $this->input->get('id');
+        $cliente = $this->clientes_model->getById($id);
+        echo json_encode($cliente);
+    }
+
     public function excluir()
     {
-        if (!$this->permission->checkPermission($this->session->userdata('permissao'), 'dCliente')) {
+        if (!$this->permission->checkPermission($this->session->userdata('permissao'), 'dClientes')) {
+            if ($this->input->is_ajax_request()) {
+                echo json_encode(['success' => false, 'message' => 'Você não tem permissão para excluir clientes.']);
+                return;
+            }
             $this->session->set_flashdata('error', 'Você não tem permissão para excluir clientes.');
             redirect(base_url());
         }
 
         $id = $this->input->post('id');
         if ($id == null) {
+            if ($this->input->is_ajax_request()) {
+                echo json_encode(['success' => false, 'message' => 'Erro ao tentar excluir cliente.']);
+                return;
+            }
             $this->session->set_flashdata('error', 'Erro ao tentar excluir cliente.');
             redirect(site_url('clientes/gerenciar/'));
         }
@@ -198,7 +289,6 @@ class Clientes extends MY_Controller
             $this->clientes_model->removeClientOs($os);
         }
 
-        // excluindo Vendas vinculadas ao cliente
         $vendas = $this->clientes_model->getAllVendasByClient($id);
         if ($vendas != null) {
             $this->clientes_model->removeClientVendas($vendas);
@@ -206,6 +296,11 @@ class Clientes extends MY_Controller
 
         $this->clientes_model->delete('clientes', 'idClientes', $id);
         log_info('Removeu um cliente. ID' . $id);
+
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(['success' => true, 'message' => 'Cliente excluído com sucesso!']);
+            return;
+        }
 
         $this->session->set_flashdata('success', 'Cliente excluido com sucesso!');
         redirect(site_url('clientes/gerenciar/'));

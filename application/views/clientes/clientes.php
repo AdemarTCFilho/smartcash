@@ -1,93 +1,164 @@
-<div class="new122">
-    <?php if ($this->permission->checkPermission($this->session->userdata('permissao'), 'aCliente')) { ?>
-        <a href="<?php echo base_url(); ?>index.php/clientes/adicionar" class="button btn btn-mini btn-success" style="max-width: 165px">
-            <span class="button__icon"><i class='bx bx-plus-circle'></i></span><span class="button__text2">
-                Cliente / Fornecedor
-            </span>
-        </a>
-    <?php } ?>
+<link rel="stylesheet" href="<?= base_url('application/views/clientes/clientes.css') ?>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <div class="widget-box">
-        <div class="widget-title"style="margin: -20px 0 0">
-            <span class="icon">
-                <i class="fas fa-user"></i>
-            </span>
-            <h5>Clientes</h5>
-        </div>
+<div class="container">
+    <div class="title">Clientes</div>
+    <div class="sub">Cadastro e gerenciamento de clientes</div>
 
-        <div class="widget-content nopadding tab-content">
-            <table id="tabela" class="table table-bordered ">
-                <thead>
-                    <tr>
-                        <th>Cod.</th>
-                        <th>Nome</th>
-                        <th>CPF/CNPJ</th>
-                        <th>Telefone</th>
-                        <th>Email</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
+    <div class="card panel table-panel bottom">
+        <div class="texto-card">CADASTRO DE CLIENTE</div><hr/>
+        <form id="formCliente">
+            <input type="hidden" name="id" value="">
+            <div class="texto-card">
+                <div class="section active card texto-card">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nome do Cliente *</label>
+                            <input class="swal-input" type="text" name="nomeCliente" placeholder="Digite o nome" maxlength="255">
+                        </div>
+                        <div class="form-group">
+                            <label>Sexo *</label>
+                            <select class="swal-input" name="sexo" style="height: 38px;">
+                                <option value="">Selecione</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Feminino">Feminino</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo Pessoa</label>
+                            <select class="swal-input" name="pessoa_fisica" style="height: 38px;" onchange="aplicarMascaraDocumento()">
+                                <option value="1">Pessoa Física</option>
+                                <option value="0">Pessoa Jurídica</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Documento *</label>
+                            <input class="swal-input" type="text" name="documento" placeholder="Digite o CPF/CNPJ" maxlength="18" oninput="aplicarMascaraDocumento(this)">
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="swal-input" name="status" style="height: 38px;">
+                                <option value="1">Ativo</option>
+                                <option value="0">Inativo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Telefone</label>
+                            <input class="swal-input" type="text" name="telefone" placeholder="Digite o telefone" maxlength="15" oninput="aplicarMascaraTelefone(this)">
+                        </div>
+                        <div class="form-group">
+                            <label>Celular</label>
+                            <input class="swal-input" type="text" name="celular" placeholder="Digite o celular" maxlength="15" oninput="aplicarMascaraTelefone(this)">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input class="swal-input" type="email" name="email" placeholder="Digite o email" maxlength="100">
+                        </div>
+                    </div>
 
-                    if (!$results) {
-                        echo '<tr>
-                                <td colspan="6">Nenhum Cliente Cadastrado</td>
-                                </tr>';
-                    }
-                    foreach ($results as $r) {
-                        echo '<tr>';
-                        echo '<td>' . $r->idClientes . '</td>';
-                        echo '<td><a href="' . base_url() . 'index.php/clientes/visualizar/' . $r->idClientes . '" style="margin-right: 1%">' . $r->nomeCliente . '</a></td>';
-                        echo '<td>' . $r->documento . '</td>';
-                        echo '<td>' . $r->telefone . '</td>';
-                        echo '<td>' . $r->email . '</td>';
-                        echo '<td>';
-                        if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vCliente')) {
-                            echo '<a href="' . base_url() . 'index.php/clientes/visualizar/' . $r->idClientes . '" style="margin-right: 1%" class="btn-nwe" title="Ver mais detalhes"><i class="bx bx-show bx-xs"></i></a>';
-                            echo '<a href="' . base_url() . 'index.php/mine?e=' . $r->email . '" target="new" style="margin-right: 1%" class="btn-nwe2" title="Área do cliente"><i class="bx bx-key bx-xs"></i></a>';
-                        }
-                        if ($this->permission->checkPermission($this->session->userdata('permissao'), 'eCliente')) {
-                            echo '<a href="' . base_url() . 'index.php/clientes/editar/' . $r->idClientes . '" style="margin-right: 1%" class="btn-nwe3" title="Editar Cliente"><i class="bx bx-edit bx-xs"></i></a>';
-                        }
-                        if ($this->permission->checkPermission($this->session->userdata('permissao'), 'dCliente')) {
-                            echo '<a href="#modal-excluir" role="button" data-toggle="modal" cliente="' . $r->idClientes . '" style="margin-right: 1%" class="btn-nwe4" title="Excluir Cliente"><i class="bx bx-trash-alt bx-xs"></i></a>';
-                        }
-                        echo '</td>';
-                        echo '</tr>';
-                    } ?>
+                    <div class="section-title">Endereço</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Rua</label>
+                            <input class="swal-input" type="text" name="rua" placeholder="Digite a rua" maxlength="70">
+                        </div>
+                        <div class="form-group">
+                            <label>Número</label>
+                            <input class="swal-input" type="text" name="numero" placeholder="Digite o número" maxlength="15">
+                        </div>
+                        <div class="form-group">
+                            <label>Bairro</label>
+                            <input class="swal-input" type="text" name="bairro" placeholder="Digite o bairro" maxlength="45">
+                        </div>
+                        <div class="form-group">
+                            <label>Cidade</label>
+                            <input class="swal-input" type="text" name="cidade" placeholder="Digite a cidade" maxlength="45">
+                        </div>
+                        <div class="form-group">
+                            <label>Estado</label>
+                            <select class="swal-input" name="estado" style="height: 38px;">
+                                <option value="">Selecione</option>
+                                <option value="AC">Acre</option>
+                                <option value="AL">Alagoas</option>
+                                <option value="AP">Amapá</option>
+                                <option value="AM">Amazonas</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="ES">Espírito Santo</option>
+                                <option value="GO">Goiás</option>
+                                <option value="MA">Maranhão</option>
+                                <option value="MT">Mato Grosso</option>
+                                <option value="MS">Mato Grosso do Sul</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="PA">Pará</option>
+                                <option value="PB">Paraíba</option>
+                                <option value="PR">Paraná</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="PI">Piauí</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="RN">Rio Grande do Norte</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="RO">Rondônia</option>
+                                <option value="RR">Roraima</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="SE">Sergipe</option>
+                                <option value="TO">Tocantins</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>CEP</label>
+                            <input class="swal-input" type="text" name="cep" placeholder="Digite o CEP" maxlength="9" oninput="aplicarMascaraCep(this)">
+                        </div>
+                        <div class="form-group">
+                            <label>Complemento</label>
+                            <input class="swal-input" type="text" name="complemento" placeholder="Digite o complemento" maxlength="45">
+                        </div>
+                    </div>
 
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <?php echo $this->pagination->create_links(); ?>
-
-
-    <!-- Modal -->
-    <div id="modal-excluir" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <form action="<?php echo base_url() ?>index.php/clientes/excluir" method="post">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h5 id="myModalLabel">Excluir Cliente</h5>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="idCliente" name="id" value="" />
-                <h5 style="text-align: center">Deseja realmente excluir este cliente e os dados associados a ele (OS, Vendas, Receitas)?</h5>
-            </div>
-            <div class="modal-footer" style="display:flex;justify-content: center">
-              <button class="button btn btn-warning" data-dismiss="modal" aria-hidden="true"><span class="button__icon"><i class="bx bx-x"></i></span><span class="button__text2">Cancelar</span></button>
-              <button class="button btn btn-danger"><span class="button__icon"><i class='bx bx-trash'></i></span> <span class="button__text2">Excluir</span></button>
+                    <div class="section-title">Informações Adicionais</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Contato</label>
+                            <input class="swal-input" type="text" name="contato" placeholder="Digite o contato" maxlength="45">
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="fornecedor" value="1"> Fornecedor
+                            </label>
+                        </div>
+                    </div>
+                </div><br/>
+                <button type="button" class="baixar-btn" onclick="salvarCliente()">Adicionar Cliente</button>
             </div>
         </form>
     </div>
+
+    <div class="card panel">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NOME</th>
+                    <th>SEXO</th>
+                    <th>DOCUMENTO</th>
+                    <th>TELEFONE</th>
+                    <th>EMAIL</th>
+                    <th>CIDADE</th>
+                    <th>ESTADO</th>
+                    <th>STATUS</th>
+                    <th>FORNECEDOR</th>
+                    <th>AÇÃO</th>
+                </tr>
+            </thead>
+            <tbody id="tabelaClientes"></tbody>
+        </table>
+    </div>
 </div>
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        $(document).on('click', 'a', function(event) {
-            var cliente = $(this).attr('cliente');
-            $('#idCliente').val(cliente);
-        });
-    });
+<script>
+    var siteUrl = '<?= site_url() ?>';
 </script>
+<script src="<?= base_url('application/views/clientes/clientes.js') ?>"></script>
