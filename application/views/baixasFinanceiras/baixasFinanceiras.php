@@ -1,233 +1,153 @@
-
-<meta charset="UTF-8">
-<title>Baixas Financeiras</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-    :root {
-        --bg: #05081d;
-        --panel: #0b1030;
-        --border: #202a68;
-        --text: #fff;
-        --muted: #9aa3d0;
-        --green: #00ff9d;
-        --red: #ff5b67;
-        --purple: #5358ee;
-    }
-
-    body {
-        background: var(--bg);
-        color: var(--text);
-        font-family: 'Inter', sans-serif;
-    }
-
-    .container {
-        padding: 12px;
-        max-width: 1600px;
-        margin: auto;
-    }
-
-    .title {
-        font-size: 34px;
-        font-weight: 700;
-        margin-top: 5px;
-    }
-
-    .sub {
-        color: var(--muted);
-        font-size: 13px;
-    }
-
-    .cards-duplo {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 14px;
-        margin-top: 24px;
-    }
-
-    .card {
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 18px;
-    }
-
-    .label {
-        font-size: 11px;
-        letter-spacing: 3px;
-        color: #95a0d7;
-        background: #0b1030;
-    }
-
-    .value {
-        font-size: 20px;
-        margin: 10px 0;
-        font-weight: 600;
-    }
-
-    .value.red { color: var(--text); }
-    .value.green { color: var(--text); }
-    .muted { color: var(--muted); font-size: 12px; }
-
-    .panel {
-        margin-top: 24px;
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 5px;
-    }
-
-    .linha-btn {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-    }
-
-    .btn {
-        background: #11183D;
-        /* border: 1px solid var(--border); */
-        color: #8E98C6;
-        padding: 8px 14px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    .div-center {
-        text-align: center !important;
-        padding:30px;
-    }
-
-    .btn:hover { background: #121f5e; color: #fff; }
-    .btn.active { background: var(--purple); color: #fff; border: 1px solid var(--purple); }
-
-    .tab-content { display: none; margin-top: -14px; }
-    .tab-content.active { display: block; }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 12px;
-    }
-
-    th, td {
-        padding: 12px;
-        border-bottom: 1px solid #1a2257;
-        white-space: nowrap;
-    }
-
-    .tab-content:not(.doc-example-content) {
-        z-index: 1;
-        padding: 0px !important;
-    }
-
-    th { color: #ffffff; text-align: left; }
-    .status { padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; background:#331731; color:#ff7180; }
-    .baixar-btn { background: var(--purple); color:#fff; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; font-size:11px; }
-</style>
+<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/js/jquery.boot.css">
+<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>application/views/baixasFinanceiras/baixasFinanceiras.css">
 
 <div class="container">
-    <div class="title">Baixas Financeiras</div>
-    <div class="sub">Controle de pagamentos e recebimentos · Auditoria</div>
+    <div class="topbar">
+        <div>
+            <div class="title">Baixas Financeiras</div>
+            <div class="sub">Baixa de t&iacute;tulos a pagar e a receber</div>
+        </div>
+        <div class="filters">
+            <select id="tipoPeriodoSelect" class="form-control" style="width:120px;">
+                <option class="btn active" value="mensal">Mensal</option>
+                <option class="btn" value="trimestral">Trimestral</option>
+                <option class="btn" value="anual">Anual</option>
+            </select>
+            <select id="periodoSelect" class="form-control" style="width:140px;"></select>
+            <select id="empresaSelect" class="form-control" style="width:200px;">
+                <option value="">Todas as Empresas</option>
+            </select>
+        </div>
+    </div>
 
     <div class="cards-duplo">
         <div class="card">
-            <div class="label">A PAGAR (SALDO DEVEDOR)</div>
-            <div class="value red">R$ 0,00</div>
-            <div class="muted">0 título(s)</div>
+            <div class="label">CONTAS A PAGAR</div>
+            <div class="value neg" id="saldoDevedor">R$ 0,00</div>
+            <div class="muted"><span id="totalAPagar">0</span> t&iacute;tulos pendentes</div>
         </div>
         <div class="card">
-            <div class="label">A RECEBER (SALDO)</div>
-            <div class="value green">R$ 31.000,00</div>
-            <div class="muted">3 título(s)</div>
+            <div class="label">CONTAS A RECEBER</div>
+            <div class="value pos" id="saldoReceber">R$ 0,00</div>
+            <div class="muted"><span id="totalAReceber">0</span> t&iacute;tulos pendentes</div>
         </div>
     </div>
 
-    <!-- Abas -->
     <div class="panel">
-        <div class="linha-btn">
-            <button class="btn active" onclick="openTab('pagar')">Contas a Pagar</button>
-            <button class="btn" onclick="openTab('receber')">Contas a Receber</button>
-            <button class="btn" onclick="openTab('hist-pag')">Histórico — Pagamentos</button>
-            <button class="btn" onclick="openTab('hist-rec')">Histórico — Recebimentos</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:12px;">
+            <div class="linha-btn">
+                <button class="btn active" data-tab="pagar">Contas a Pagar</button>
+                <button class="btn" data-tab="receber">Contas a Receber</button>
+                <button class="btn" data-tab="hist-pag">Hist&oacute;rico Pagamentos</button>
+                <button class="btn" data-tab="hist-rec">Hist&oacute;rico Recebimentos</button>
+            </div>
+            <button id="exportCSV" class="btn" style="background:#1f8b4c;color:#fff;margin-left: 10%;">Exportar CSV</button>
+            <input type="text" id="buscaInput" class="busca-input" placeholder="Buscar cliente..." />
         </div>
-    </div>
 
-    <!-- Conteúdo das abas -->
-    <div id="pagar" class="tab-content active">
-        <div class="card panel div-center">
-            <div class="muted">Nenhum título pendente.</div>
+        <div id="tab-pagar" class="tab-content active">
+            <div class="tablewrap">
+                <table id="tabelaPagar">
+                    <thead>
+                        <tr>
+                            <th>Fornecedor</th>
+                            <th>Vencimento</th>
+                            <th>Valor</th>
+                            <th>Valor Pago</th>
+                            <th>Saldo</th>
+                            <th>Status</th>
+                            <th>A&ccedil;&atilde;o</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <div id="receber" class="tab-content">
-        <div class="card panel">
-            <table>
-                <thead>
-                    <tr>
-                        <th>CLIENTE</th>
-                        <th>VENCIMENTO</th>
-                        <th>VALOR</th>
-                        <th>PAGO/RECEBIDO</th>
-                        <th>SALDO</th>
-                        <th>STATUS</th>
-                        <th>AÇÃO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Tets</td>
-                        <td>19/06/2026</td>
-                        <td>R$ 1.000,00</td>
-                        <td>R$ 0,00</td>
-                        <td>R$ 1.000,00</td>
-                        <td><span class="status">Aberta</span></td>
-                        <td><button class="baixar-btn">Baixar</button></td>
-                    </tr>
-                    <tr>
-                        <td>Testando</td>
-                        <td>19/06/2026</td>
-                        <td>R$ 10.000,00</td>
-                        <td>R$ 0,00</td>
-                        <td>R$ 10.000,00</td>
-                        <td><span class="status">Aberta</span></td>
-                        <td><button class="baixar-btn">Baixar</button></td>
-                    </tr>
-                    <tr>
-                        <td>prova</td>
-                        <td>20/06/2026</td>
-                        <td>R$ 20.000,00</td>
-                        <td>R$ 0,00</td>
-                        <td>R$ 20.000,00</td>
-                        <td><span class="status">Aberta</span></td>
-                        <td><button class="baixar-btn">Baixar</button></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div id="tab-receber" class="tab-content">
+            <div class="tablewrap">
+                <table id="tabelaReceber">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Vencimento</th>
+                            <th>Valor</th>
+                            <th>Valor Recebido</th>
+                            <th>Saldo</th>
+                            <th>Status</th>
+                            <th>A&ccedil;&atilde;o</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <div id="hist-pag" class="tab-content">
-        <div class="card panel div-center">
-            <div class="muted">Nenhum pagamento encontrado.</div>
+        <div id="tab-hist-pag" class="tab-content">
+            <div class="tablewrap">
+                <table id="tabelaHistPag">
+                    <thead>
+                        <tr>
+                            <th>Fornecedor</th>
+                            <th>Vencimento</th>
+                            <th>Valor</th>
+                            <th>Valor Pago</th>
+                            <th>Data Pagamento</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <div id="hist-rec" class="tab-content">
-        <div class="card panel div-center">
-            <div class="muted">Nenhum recebimento encontrado.</div>
+        <div id="tab-hist-rec" class="tab-content">
+            <div class="tablewrap">
+                <table id="tabelaHistRec">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Vencimento</th>
+                            <th>Valor</th>
+                            <th>Valor Recebido</th>
+                            <th>Data Recebimento</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
-<script>
-    function openTab(tabId) {
-        // esconder todos
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.btn').forEach(el => el.classList.remove('active'));
-        // mostrar selecionado
-        document.getElementById(tabId).classList.add('active');
-        event.target.classList.add('active');
-    }
-</script>
+<div class="modal fade" id="baixarModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background:#0b1030;border:1px solid var(--border);">
+            <div class="modal-header" style="border-bottom:1px solid var(--border);padding:15px 20px;">
+                <button type="button" class="close" data-dismiss="modal" style="color:#fff;opacity:.8;">&times;</button>
+                <h4 class="modal-title" id="baixarModalTitle" style="color:#fff;">Baixar T&iacute;tulo</h4>
+            </div>
+            <div class="modal-body" style="padding:20px;">
+                <input type="hidden" id="baixarId" />
+                <input type="hidden" id="baixarTipo" />
+                <div class="row">
+                    <div class="col-md-12">
+                        <b style="color:#fff;">Valor Original: R$ <span id="baixarValorOriginal">0,00</span></b>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-md-12">
+                        <label style="color:#9aa3d0;">Valor a ser baixado</label>
+                        <input type="text" id="baixarValor" class="form-control" style="background:#11183D;border:1px solid var(--border);color:#fff;border-radius:8px;" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top:1px solid var(--border);padding:15px 20px;">
+                <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="confirmarBaixa" class="btn" style="background:#5358ee;color:#fff;">Confirmar Baixa</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<script>var base_url = '<?= base_url(); ?>';</script>
+<script src="<?= base_url(); ?>application/views/baixasFinanceiras/baixasFinanceiras.js"></script>

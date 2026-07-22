@@ -1,0 +1,221 @@
+:root {
+    --bg: #05081d;
+    --panel: #0b1030;
+    --border: #202a68;
+    --text: #fff;
+    --muted: #9aa3d0;
+    --green: #00ff9d;
+    --red: #ff5b67;
+    --purple: #5358ee;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+}
+
+.container {
+    padding: 20px;
+    max-width: 1600px;
+    margin: auto;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 18px;
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 34px;
+    font-weight: 700;
+    margin-top: 5px;
+}
+
+.sub {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.saldo-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+.saldo-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #95a0d7;
+}
+
+.saldo-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--green);
+    margin-top: 8px;
+}
+
+.btn {
+    background: #11183D;
+    color: #8E98C6;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn:hover { background: #121f5e; color: #fff; }
+.btn.primary { background: var(--purple); color: #fff; }
+.btn.primary:hover { opacity: .85; }
+.btn.danger { background: #441a1a; color: #ff5b67; }
+.btn.danger:hover { background: #662222; }
+
+.panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 5px;
+    margin-top: 10px;
+}
+
+.tablewrap {
+    overflow: auto;
+    margin-top: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #1a2257;
+    white-space: nowrap;
+    text-align: left;
+}
+
+th { color: #ffffff; }
+
+.vazio {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+}
+
+.action-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 4px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    margin-right: 4px;
+}
+
+.action-btn:hover { color: #fff; border-color: #fff; }
+.action-btn.edit:hover { border-color: var(--purple); color: var(--purple); }
+.action-btn.delete:hover { border-color: var(--red); color: var(--red); }
+
+/* Modal custom styles */
+.modal-content.modal-content-custom {
+    background-color: #0b1030 !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+}
+
+.modal-header.modal-header-custom {
+    background-color: #0b1030 !important;
+    border-bottom: 1px solid var(--border);
+    padding: 18px 22px;
+}
+
+.modal-body.modal-body-custom {
+    background-color: #0b1030 !important;
+    padding: 22px;
+}
+
+.modal-footer.modal-footer-custom {
+    background-color: #0b1030 !important;
+    border-top: 1px solid var(--border);
+    padding: 14px 22px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.modal-title-custom {
+    color: #fff !important;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.modal-backdrop {
+    background-color: #000 !important;
+}
+
+.modal.fade .modal-dialog {
+    transform: translate(0, 0) !important;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    color: #9aa3d0;
+    font-size: 12px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.form-control-custom {
+    width: 100%;
+    background: #11183D;
+    border: 1px solid var(--border);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.form-control-custom:focus {
+    border-color: var(--purple);
+}
+
+.form-control-custom::placeholder {
+    color: #5a6390;
+}
+
+select.form-control-custom {
+    appearance: auto;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+@media(max-width:700px) {
+    .topbar { flex-direction: column; gap: 15px; }
+    .grid-2 { grid-template-columns: 1fr; }
+}

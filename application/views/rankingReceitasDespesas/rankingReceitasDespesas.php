@@ -1,465 +1,140 @@
+<link rel="stylesheet" href="<?= base_url('application/views/rankingReceitasDespesas/rankingReceitasDespesas.css') ?>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div class="container">
 
-    <title>Grupo Saúde Master</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
-    <style>
-        :root {
-            --bg: #05071A;
-            --card: #0e0c2b;
-            --border: #1B2455;
-            --text: #FFFFFF;
-            --muted: #7E89B7;
-            --green: #42D67A;
-            --red: #FF5B6A;
-            --blue: #6172FF;
-            --yellow: #F4C542;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-            /* padding: 12px; */
-        }
-
-        .container {
-            max-width: 1600px;
-            margin: auto;
-            padding: 20px;
-        }
-
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 18px;
-        }
-
-        .subtitle {
-            color: #5358ee;
-            font-size: 11px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .title {
-            font-size: 34px;
-            font-weight: 700;
-            margin-top: 5px;
-        }
-
-        .desc {
-            color: var(--muted);
-            margin-top: 5px;
-        }
-
-        .filters {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn {
-            background: #11183D;
-            border: 1px solid var(--border);
-            color: #8E98C6;
-            padding: 8px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .btn.active {
-            color: #fff;
-            background: #5358ee;
-        }
-
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-        }
-
-        .stat {
-            padding: 22px;
-        }
-
-        .stat-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .stat-label {
-            color: #8E98C6;
-            font-size: 11px;
-            text-transform: uppercase;
-        }
-
-        .icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .icon.blue {
-            background: rgba(97, 114, 255, .15);
-            color: var(--blue);
-        }
-
-        .icon.red {
-            background: rgba(255, 91, 106, .15);
-            color: var(--red);
-        }
-
-        .icon.green {
-            background: rgba(66, 214, 122, .15);
-            color: var(--green);
-        }
-
-        .value {
-            margin-top: 18px;
-            font-size: 26px;
-            font-weight: 700;
-            color: var(--text);
-        }
-
-        .small {
-            margin-top: 8px;
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        .panel {
-            margin-top: 18px;
-            padding: 18px;
-        }
-
-        .panel-title {
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: var(--text);
-        }
-
-        .panel-sub {
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        .panel-sub-vazio {
-            color: var(--muted);
-            font-size: 13px;
-            text-align: center;
-            padding: 15px;
-        }
-
-        .chart-large {
-            height: 420px;
-        }
-
-        .middle {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 16px;
-        }
-
-        .chart-medium {
-            height: 300px;
-        }
-
-        .chart-small {
-            height: 300px;
-        }
-
-        .table-panel {
-            margin-top: 18px;
-        }
-
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 18px;
-        }
-
-        .table th {
-            color: #8E98C6;
-            text-align: left;
-            padding: 14px;
-            font-size: 12px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .table td {
-            padding: 14px;
-            border-bottom: 1px solid rgba(255, 255, 255, .05);
-            color: var(--text);
-        }
-
-        .green {
-            color: var(--green) !important;
-        }
-
-        .bottom {
-            margin-top: 18px;
-        }
-
-        .rank-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px;
-            border-bottom: 1px solid rgba(255, 255, 255, .05);
-        }
-
-        .rank-left {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            color: var(--text);
-        }
-
-        .rank-number {
-            width: 28px;
-            height: 28px;
-            background: #323d7c;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-        }
-
-        .month-select {
-            background: #09102d;
-            color: white;
-            border: 1px solid var(--border);
-            padding: 10px 16px;
-            outline: none;
-        }
-
-        .alinha-direta {
-            text-align: right !important;
-        }
-
-        .cor-texto-branco {
-            color: var(--text);
-        }
-
-        .sub-texto {
-            font-size: 9px;
-            margin-bottom: -1%;
-            color: #7E89B7;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 25px;
-        }
-        .tamanho-td {
-            width: 0px;
-        }
-
-        .tamanho-td-empresa {
-            width: 70%;
-        }
-
-        @media(max-width:1100px) {
-
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .middle {
-                grid-template-columns: 1fr;
-            }
-
-        }
-
-        @media(max-width:700px) {
-
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
-            .topbar {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-        }
-    </style>
-
-    <div class="container">
-
-        <div class="topbar header">
-
-            <div>
-                <div class="subtitle">PERFORMANCE POR UNIDADE</div>
-                <div class="title">Ranking de Receitas & Despesas</div>
-                <div class="desc">
-                    Consolidado de 16 unidades • 4 empresas • Jun/26
-                </div>
-            </div>
-
-            <div class="filters">
-                <button class="btn active" data-period="mensal">Mensal</button>
-                <button class="btn" data-period="trimestral">Trimestral</button>
-                <button class="btn" data-period="anual">Anual</button>
-                <select class="btn" id="periodo-select" style="height: 43px;">
-                    <option class="btn">Jan/26</option>
-                    <option class="btn">Fev/26</option>
-                    <option class="btn">Mar/26</option>
-                    <option class="btn">Abr/26</option>
-                    <option class="btn">Mai/26</option>
-                    <option class="btn" selected>Jun/26</option>
-                </select>
-            </div>
-
+    <div class="topbar">
+        <div>
+            <div class="subtitle">PERFORMANCE FINANCEIRA</div>
+            <div class="title">Ranking de Receitas & Despesas</div>
+            <div class="desc" id="periodoLabel">—</div>
         </div>
 
-
-        <div class="card panel table-panel bottom">
-
-            <div class="panel-sub-vazio">Nenhum lançamento encontrado no período selecionado.</div>
-
+        <div class="filters">
+            <button class="btn active" data-period="mensal">Mensal</button>
+            <button class="btn" data-period="trimestral">Trimestral</button>
+            <button class="btn" data-period="anual">Anual</button>
+            <select class="btn" id="periodo-select" style="height:43px;"></select>
+            <select class="btn" id="filtroEmpresa" style="height:43px;">
+                <option value="">Todas as empresas</option>
+            </select>
         </div>
-
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="stats">
+        <div class="card stat">
+            <div class="stat-head">
+                <span class="stat-label">Receitas</span>
+                <span class="icon green"><i class="bi bi-arrow-up"></i></span>
+            </div>
+            <div class="value" id="totalReceitas">R$ 0,00</div>
+            <div class="small" id="totalReceitasContas">0 lançamento(s)</div>
+        </div>
+        <div class="card stat">
+            <div class="stat-head">
+                <span class="stat-label">Despesas</span>
+                <span class="icon red"><i class="bi bi-arrow-down"></i></span>
+            </div>
+            <div class="value" id="totalDespesas">R$ 0,00</div>
+            <div class="small" id="totalDespesasContas">0 lançamento(s)</div>
+        </div>
+        <div class="card stat">
+            <div class="stat-head">
+                <span class="stat-label">Saldo</span>
+                <span class="icon blue"><i class="bi bi-wallet2"></i></span>
+            </div>
+            <div class="value" id="saldo">R$ 0,00</div>
+            <div class="small" id="totalLancamentos">0 registro(s)</div>
+        </div>
+        <div class="card stat">
+            <div class="stat-head">
+                <span class="stat-label">Empresas/Unidades</span>
+                <span class="icon yellow"><i class="bi bi-buildings"></i></span>
+            </div>
+            <div class="value" id="totalRegistros" style="font-size:22px;">0</div>
+            <div class="small">com lançamentos</div>
+        </div>
+    </div>
 
-    <script>
+    <div class="cards-duplo">
+        <div class="card panel">
+            <div class="panel-title">Comparativo Receitas vs Despesas</div>
+            <div class="panel-sub">Por unidade / empresa</div>
+            <div class="chart-container" style="margin-top:14px;">
+                <canvas id="chartBar"></canvas>
+            </div>
+        </div>
+        <div class="card panel">
+            <div class="panel-title">Distribuição do Resultado</div>
+            <div class="panel-sub">Saldo por unidade</div>
+            <div class="chart-container" style="margin-top:14px;">
+                <canvas id="chartDoughnut"></canvas>
+            </div>
+        </div>
+    </div>
 
-        Chart.defaults.color = "#7E89B7";
-        Chart.defaults.borderColor = "rgba(255,255,255,.05)";
+    <div class="cards-triplo">
+        <div class="card panel">
+            <div class="panel-title">Maiores Receitas</div>
+            <div class="panel-sub">Top 5 do período</div>
+            <div class="rank-list" id="rankingReceitas" style="margin-top:10px;">
+                <div class="panel-sub-vazio">Carregando...</div>
+            </div>
+        </div>
+        <div class="card panel">
+            <div class="panel-title">Maiores Despesas</div>
+            <div class="panel-sub">Top 5 do período</div>
+            <div class="rank-list" id="rankingDespesas" style="margin-top:10px;">
+                <div class="panel-sub-vazio">Carregando...</div>
+            </div>
+        </div>
+        <div class="card panel">
+            <div class="panel-title">Ações</div>
+            <div class="panel-sub">Exportar relatório</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
+                <button class="btn" onclick="exportarCSV()" style="width:100%;text-align:center;">
+                    <i class="bi bi-file-earmark-spreadsheet"></i> Exportar CSV
+                </button>
+                <button class="btn" onclick="exportarPDF()" style="width:100%;text-align:center;">
+                    <i class="bi bi-file-earmark-pdf"></i> Exportar PDF (imprimir)
+                </button>
+                <hr style="border-color:var(--border);margin:8px 0;">
+                <div class="view-toggle" style="display:flex;gap:4px;">
+                    <button class="btn active" data-visao="unidade" style="flex:1;text-align:center;">Por Unidade</button>
+                    <button class="btn" data-visao="empresa" style="flex:1;text-align:center;">Por Empresa</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        new Chart(document.getElementById('linha'), {
-            type: 'line',
-            data: {
-                labels: ['Jul/25', 'Ago/25', 'Set/25', 'Out/25', 'Nov/25', 'Dez/25', 'Jan/26', 'Fev/26', 'Mar/26', 'Abr/26', 'Mai/26', 'Jun/26'],
-                datasets: [{
-                    label: 'Lucro',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 31000],
-                    borderColor: '#6172FF',
-                    backgroundColor: 'rgba(97,114,255,.15)',
-                    fill: true,
-                    tension: .4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
+    <div class="card panel">
+        <div class="panel-title">Detalhamento</div>
+        <div class="panel-sub" id="totalRegistrosDetalhe"></div>
+        <div class="tablewrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th id="thCol1">UNIDADE</th>
+                        <th>EMPRESA</th>
+                        <th>RECEITA</th>
+                        <th>DESPESA</th>
+                        <th>SALDO</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaDados">
+                    <tr><td colspan="5" class="panel-sub-vazio">Carregando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-        new Chart(document.getElementById('barra'), {
-            type: 'bar',
-            data: {
-                labels: ['Workmed', 'Vitalab', 'Agreste', 'Plusmed'],
-                datasets: [
-                    {
-                        label: 'Receita',
-                        backgroundColor: '#42D67A',
-                        data: [0, 20000, 0, 11000]
-                    },
-                    {
-                        label: 'Lucro',
-                        backgroundColor: '#6172FF',
-                        data: [0, 20000, 0, 11000]
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
+</div>
 
-        new Chart(document.getElementById('donut'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Workmed', 'Vitalab', 'Agreste', 'Plusmed'],
-                datasets: [{
-                    data: [0, 64.5, 0, 35.5],
-                    backgroundColor: [
-                        '#6172FF',
-                        '#F4C542',
-                        '#FF5B6A',
-                        '#42D67A'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
-
-        const filtros = document.querySelectorAll('.filters .btn[data-period]');
-        const select = document.getElementById('periodo-select');
-
-        const opcoesMensais = ['Jan/26', 'Fev/26', 'Mar/26', 'Abr/26', 'Mai/26', 'Jun/26',
-                               'Jul/26', 'Ago/26', 'Set/26', 'Out/26', 'Nov/26', 'Dez/26'];
-        const opcoesTrimestrais = [
-            { value: 'T1', label: 'T1 (Jul/25\u2013Set/25)' },
-            { value: 'T2', label: 'T2 (Out/25\u2013Dez/25)' },
-            { value: 'T3', label: 'T3 (Jan/26\u2013Mar/26)' },
-            { value: 'T4', label: 'T4 (Abr/26\u2013Jun/26)' }
-        ];
-
-        filtros.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filtros.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-
-                const periodo = btn.dataset.period;
-
-                if (periodo === 'anual') {
-                    select.style.display = 'none';
-                } else {
-                    select.style.display = '';
-                    select.innerHTML = '';
-
-                    if (periodo === 'trimestral') {
-                        opcoesTrimestrais.forEach(op => {
-                            const opt = document.createElement('option');
-                            opt.value = op.value;
-                            opt.textContent = op.label;
-                            opt.classList.add('btn'); 
-                            select.appendChild(opt);
-                        });
-                    } else {
-                        opcoesMensais.forEach(op => {
-                            const opt = document.createElement('option');
-                            opt.textContent = op;
-                            opt.classList.add('btn'); 
-                            select.appendChild(opt);
-                        });
-                    }
-                    select.selectedIndex = 0;
-                }
-            });
-        });
-
-    </script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    Chart.defaults.color = "#7E89B7";
+    Chart.defaults.borderColor = "rgba(255,255,255,.05)";
+    var siteUrl = '<?= site_url() ?>';
+</script>
+<script src="<?= base_url('application/views/rankingReceitasDespesas/rankingReceitasDespesas.js') ?>"></script>
