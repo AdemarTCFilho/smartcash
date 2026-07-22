@@ -4,7 +4,7 @@
     --border: #202a68;
     --text: #fff;
     --muted: #9aa3d0;
-    --green: #33e676;
+    --green: #00ff9d;
     --red: #ff5b67;
     --yellow: #f3bf3a;
     --purple: #6b63ff;
@@ -50,9 +50,11 @@ body {
     font-size: 11px
 }
 
-h1 {
-    margin: 6px 0;
-    font-size: 42px
+.title {
+    font-size: 34px;
+    font-weight: 700;
+    margin-top: 5px;
+    width: 170%;
 }
 
 .sub {
@@ -65,7 +67,7 @@ h1 {
     gap: 5px;
     flex-wrap: wrap;
     width: 100%;
-    justify-content: flex-end; /* Alinha os itens à direita */
+    justify-content: flex-end;
 }
 
 .linha-btn {
@@ -89,14 +91,30 @@ button {
 
 button {
     background: var(--purple);
-    font-weight: 600
+    font-weight: 600;
+    cursor: pointer;
 }
 
 .cards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 14px;
     margin-top: 24px
+}
+
+.cards-duplo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 24px
+}
+
+.cards-duplo .despesas {
+    grid-column: span 2;
+}
+
+.cards-duplo .vencimentos {
+    grid-column: span 1;
 }
 
 .card,
@@ -132,41 +150,30 @@ button {
     font-size: 12px
 }
 
+.texto-card {
+    color: var(--text);
+    margin: 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
 .panel {
     margin-top: 24px
 }
 
-.panel h5 {
-    margin: 0;
-    padding: 16px;
-    border-bottom: 1px solid var(--border);
-    color: var(--text) !important;
+.div-espaco {
+    padding: 1.5%;
 }
 
-.grid4 {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr)
+.panel-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text);
 }
 
-.company {
-    padding: 16px;
-    border-right: 1px solid var(--border)
-}
-
-.company:last-child {
-    border-right: none
-}
-
-.bar {
-    height: 6px;
-    background: #161635;
-    margin: 10px 0
-}
-
-.bar div {
-    height: 100%;
-    background: var(--green);
-    width: 0%
+.panel-sub {
+    color: var(--muted);
+    font-size: 13px;
 }
 
 .tablewrap {
@@ -191,44 +198,6 @@ th {
     text-align: left
 }
 
-.badge {
-    padding: 3px 8px;
-    border-radius: 10px;
-    background: #18204d;
-    color: #9aa3d0;
-    font-size: 10px
-}
-
-.status {
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 10px;
-    font-weight: 700
-}
-
-.att {
-    background: #4a3900;
-    color: #ffd04d;
-    border: 0.1px solid #ffd04d;
-}
-
-.crit {
-    background: #331731;
-    color: #ff7180;
-    border: 0.1px solid #ff7180;
-}
-
-.green {
-    color: var(--green);
-    font-size: 12px;
-}
-
-.title {
-    font-size: 34px;
-    font-weight: 700;
-    margin-top: 5px;
-}
-
 .btn {
     background: #11183D;
     border: 1px solid var(--border);
@@ -240,44 +209,59 @@ th {
 
 .btn:hover {
     background: #121f5e;
-    border: 1px solid var(--border);
-    color: #8E98C6;
-    padding: 8px 14px;
-    border-radius: 8px;
-    cursor: pointer;
 }
 
-.panel-title {
-    font-weight: 600;
-    margin-bottom: 4px;
-    color: var(--text);
-}
-
-.panel-sub {
-    color: var(--muted);
+.item-categoria {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #1a2257;
     font-size: 13px;
 }
 
-.div-espaco {
-    padding: 1.5%;
+.item-categoria:last-child {
+    border-bottom: none;
+}
+
+.item-vencimento {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #1a2257;
+    font-size: 13px;
+}
+
+.item-vencimento:last-child {
+    border-bottom: none;
+}
+
+.vencimento-label {
+    color: var(--muted);
+}
+
+.vencimento-valor {
+    color: var(--text);
+    font-weight: 500;
 }
 
 @media(max-width:1000px) {
-
     .cards,
-    .grid4 {
+    .cards-duplo {
         grid-template-columns: 1fr
+    }
+    .cards-duplo .despesas,
+    .cards-duplo .vencimentos {
+        grid-column: span 1;
     }
 }
 
-/* SweetAlert2 Custom Styles */
 .swal2-popup {
     background: #040414 !important;
     border: 1px solid #202a68;
     border-radius: 8px;
     color: #fff;
     font-family: 'Inter', sans-serif;
-    width: 550px !important;
+    width: 650px !important;
 }
 
 .swal2-title {
@@ -291,8 +275,9 @@ th {
 .swal-label {
     display: block;
     margin-top: 12px;
-    font-size: 14px;
+    font-size: 13px;
     color: #ffffff;
+    font-weight: 500;
 }
 
 .swal-input,
@@ -309,11 +294,10 @@ th {
 }
 
 .swal-textarea {
-    height: 80px;
+    height: 70px !important;
     resize: none;
 }
 
-/* Botões alinhados à direita */
 .swal2-actions {
     justify-content: flex-end !important;
     margin-top: 20px;
@@ -333,7 +317,6 @@ th {
     border: 1px solid #202a68 !important;
 }
 
-/* Botão X no canto superior direito */
 .swal2-close {
     color: #ffffff !important;
     font-size: 22px !important;
@@ -343,7 +326,6 @@ th {
     padding: 6%;
 }
 
-/* Select2 */
 .select2-container--default .select2-selection--single {
     background-color: #101641 !important;
     border: 1px solid #202a68 !important;

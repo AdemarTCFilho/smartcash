@@ -58,6 +58,7 @@ function carregarUnidades(empresaId, selectId) {
     select.innerHTML = '<option value="">Carregando...</option>';
     if (!empresaId) {
         select.innerHTML = '<option value="">Selecione uma unidade</option>';
+        $(select).trigger('change');
         return Promise.resolve();
     }
     return fetch(siteUrl + 'projetadoRealizado/listarUnidadesPorEmpresa?idEmpresa=' + empresaId)
@@ -68,6 +69,7 @@ function carregarUnidades(empresaId, selectId) {
                 opts += '<option value="' + u.idUnidade + '">' + u.nomeUnidade + '</option>';
             });
             select.innerHTML = opts;
+            $(select).trigger('change');
         });
 }
 
@@ -76,6 +78,7 @@ function carregarSubUnidades(unidadeId, selectId) {
     select.innerHTML = '<option value="">Carregando...</option>';
     if (!unidadeId) {
         select.innerHTML = '<option value="">Sem subunidade</option>';
+        $(select).trigger('change');
         return Promise.resolve();
     }
     return fetch(siteUrl + 'projetadoRealizado/listarSubUnidadesPorUnidade?idUnidade=' + unidadeId)
@@ -86,6 +89,7 @@ function carregarSubUnidades(unidadeId, selectId) {
                 opts += '<option value="' + s.idSubUnidade + '">' + s.nomeSubUnidade + '</option>';
             });
             select.innerHTML = opts;
+            $(select).trigger('change');
         });
 }
 
@@ -219,19 +223,19 @@ function abrirModal(id) {
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:15px;">
                             <div>
                                 <label class="swal-label">Empresa:</label>
-                                <select id="swal-empresa" class="swal-select" onchange="carregarUnidadesModal(this.value)">
+                                <select id="swal-empresa" class="swal-select select2-modal" onchange="carregarUnidadesModal(this.value)">
                                     ${empOpts}
                                 </select>
                             </div>
                             <div>
                                 <label class="swal-label">Unidade:</label>
-                                <select id="swal-unidade" class="swal-select" onchange="carregarSubUnidadesModal(this.value)">
+                                <select id="swal-unidade" class="swal-select select2-modal" onchange="carregarSubUnidadesModal(this.value)">
                                     <option value="">Selecione uma unidade</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="swal-label">SubUnidade:</label>
-                                <select id="swal-subunidade" class="swal-select">
+                                <select id="swal-subunidade" class="swal-select select2-modal">
                                     <option value="">Sem subunidade</option>
                                 </select>
                             </div>
@@ -272,9 +276,20 @@ function abrirModal(id) {
                 focusConfirm: false,
                 allowOutsideClick: false,
                 allowEscapeKey: false,
-                didOpen: () => {
+                didOpen: function () {
+                    let popup = Swal.getPopup();
+                    $(popup).find('.select2-modal').each(function () {
+                        let $select = $(this);
+                        $select.select2({
+                            dropdownParent: $(popup),
+                            width: '100%',
+                            placeholder: $select.find('option:first').text(),
+                            allowClear: true,
+                        });
+                    });
+
                     if (editando) {
-                        carregarDadosEdicao(id);
+                        carregarDadosEdicao(id, popup);
                     }
                 },
                 preConfirm: () => {
@@ -328,7 +343,9 @@ function abrirModal(id) {
 
 let carregarUnidadesModal = function (empresaId) {
     return carregarUnidades(empresaId, 'swal-unidade').then(() => {
-        document.getElementById('swal-subunidade').innerHTML = '<option value="">Sem subunidade</option>';
+        let sub = document.getElementById('swal-subunidade');
+        sub.innerHTML = '<option value="">Sem subunidade</option>';
+        $(sub).trigger('change');
     });
 };
 
@@ -336,23 +353,23 @@ let carregarSubUnidadesModal = function (unidadeId) {
     return carregarSubUnidades(unidadeId, 'swal-subunidade');
 };
 
-function carregarDadosEdicao(id) {
+function carregarDadosEdicao(id, popup) {
     fetch(siteUrl + 'projetadoRealizado/getDados?id=' + id)
         .then(res => res.json())
         .then(d => {
-            document.getElementById('swal-empresa').value = d.idEmpresa;
+            $('#swal-empresa').val(String(d.idEmpresa)).trigger('change');
             carregarUnidadesModal(d.idEmpresa).then(() => {
-                document.getElementById('swal-unidade').value = d.idUnidade;
+                $('#swal-unidade').val(String(d.idUnidade)).trigger('change');
                 carregarSubUnidadesModal(d.idUnidade).then(() => {
-                    document.getElementById('swal-subunidade').value = d.idSubUnidade || '';
+                    $('#swal-subunidade').val(String(d.idSubUnidade || '')).trigger('change');
                 });
             });
-            document.getElementById('swal-mes').value = d.mesReferencia || '';
-            document.getElementById('swal-receita').value = formatMoneyInput(String(d.receitaProjetada || 0));
-            document.getElementById('swal-meta').value = formatMoneyInput(String(d.metaReceita || 0));
-            document.getElementById('swal-despesa').value = formatMoneyInput(String(d.despesaProjetada || 0));
-            document.getElementById('swal-teto').value = formatMoneyInput(String(d.tetoDespesa || 0));
-            document.getElementById('swal-obs').value = d.observacoes || '';
+            $('#swal-mes').val(d.mesReferencia || '');
+            $('#swal-receita').val(formatMoneyInput(String(d.receitaProjetada || 0)));
+            $('#swal-meta').val(formatMoneyInput(String(d.metaReceita || 0)));
+            $('#swal-despesa').val(formatMoneyInput(String(d.despesaProjetada || 0)));
+            $('#swal-teto').val(formatMoneyInput(String(d.tetoDespesa || 0)));
+            $('#swal-obs').val(d.observacoes || '');
         });
 }
 

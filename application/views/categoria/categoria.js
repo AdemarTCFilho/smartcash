@@ -1,4 +1,10 @@
 function carregarCategorias() {
+    let tabelaEl = document.querySelector('#tabelaCategorias').closest('table');
+
+    if ($.fn.DataTable.isDataTable(tabelaEl)) {
+        $(tabelaEl).DataTable().destroy();
+    }
+
     fetch(siteUrl + 'categoria/listar')
         .then(res => res.json())
         .then(res => {
@@ -19,6 +25,15 @@ function carregarCategorias() {
                 '</tr>';
             });
             document.getElementById('tabelaCategorias').innerHTML = html;
+
+            $(tabelaEl).DataTable({
+                "ordering": false,
+                "pageLength": 10,
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+                "language": {
+                    "url": baseUrl + "assets/js/dataTable_pt-br.json"
+                }
+            });
         });
 }
 

@@ -44,5 +44,6 @@
 
 <script>
     var siteUrl = '<?= site_url() ?>';
+    var baseUrl = '<?= base_url() ?>';
 </script>
 <script src="<?= base_url('application/views/categoria/categoria.js') ?>"></script>
