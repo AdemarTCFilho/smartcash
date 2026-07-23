@@ -88,8 +88,8 @@
                     <li class="<?php if (isset($menuRankingReceitasDespesas)) {
                         echo 'active';
                     }; ?>">
-                        <a class="tip-bottom" title="Ranking de Receitas & Despesas" href="<?= site_url('rankingReceitasDespesas') ?>"><i class='fa fa-circle iconX' style="font-size:10px;color:#201a61;"></i>
-                            <span class="title" title="Ranking de Receitas & Despesas">Ranking por Unidade</span>
+                        <a class="tip-bottom" title="" href="<?= site_url('rankingReceitasDespesas') ?>"><i class='fa fa-circle iconX' style="font-size:10px;color:#201a61;"></i>
+                            <span class="title" title="">Ranking por Unidade</span>
                             <span class="title-tooltip">Ranking por Unidade</span>
                         </a>
                     </li>
@@ -99,8 +99,8 @@
                     <li class="<?php if (isset($menuContasReceber)) {
                         echo 'active';
                     }; ?>">
-                        <a class="tip-bottom" title="Ranking de Receitas & Despesas" href="<?= site_url('contasReceber') ?>"><i class='fa fa-circle iconX' style="font-size:10px;color:#201a61;"></i>
-                            <span class="title" title="Ranking de Receitas & Despesas">Contas a Receber</span>
+                        <a class="tip-bottom" title="" href="<?= site_url('contasReceber') ?>"><i class='fa fa-circle iconX' style="font-size:10px;color:#201a61;"></i>
+                            <span class="title" title="">Contas a Receber</span>
                             <span class="title-tooltip">Contas a Receber</span>
                         </a>
                     </li>

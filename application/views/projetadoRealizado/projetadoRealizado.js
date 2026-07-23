@@ -73,26 +73,6 @@ function carregarUnidades(empresaId, selectId) {
         });
 }
 
-function carregarSubUnidades(unidadeId, selectId) {
-    let select = document.getElementById(selectId);
-    select.innerHTML = '<option value="">Carregando...</option>';
-    if (!unidadeId) {
-        select.innerHTML = '<option value="">Sem subunidade</option>';
-        $(select).trigger('change');
-        return Promise.resolve();
-    }
-    return fetch(siteUrl + 'projetadoRealizado/listarSubUnidadesPorUnidade?idUnidade=' + unidadeId)
-        .then(res => res.json())
-        .then(res => {
-            let opts = '<option value="">Sem subunidade</option>';
-            res.data.forEach(s => {
-                opts += '<option value="' + s.idSubUnidade + '">' + s.nomeSubUnidade + '</option>';
-            });
-            select.innerHTML = opts;
-            $(select).trigger('change');
-        });
-}
-
 function formatMoney(val) {
     if (!val && val !== 0) return 'R$ 0,00';
     return 'R$ ' + parseFloat(val).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -251,16 +231,8 @@ function abrirModal(id) {
                                 <input id="swal-receita" type="text" class="swal-input" placeholder="0,00" oninput="mascaraMonetaria(this)">
                             </div>
                             <div>
-                                <label class="swal-label">Meta de receita (R$):</label>
-                                <input id="swal-meta" type="text" class="swal-input" placeholder="0,00" oninput="mascaraMonetaria(this)">
-                            </div>
-                            <div>
                                 <label class="swal-label">Despesa projetada (R$):</label>
                                 <input id="swal-despesa" type="text" class="swal-input" placeholder="0,00" oninput="mascaraMonetaria(this)">
-                            </div>
-                            <div>
-                                <label class="swal-label">Teto de despesa (R$):</label>
-                                <input id="swal-teto" type="text" class="swal-input" placeholder="0,00" oninput="mascaraMonetaria(this)">
                             </div>
                         </div>
                         <label class="swal-label" style="margin-top:15px;">Observações:</label>
@@ -297,9 +269,7 @@ function abrirModal(id) {
                     let unidade = document.getElementById('swal-unidade').value;
                     let mes = document.getElementById('swal-mes').value;
                     let receita = document.getElementById('swal-receita').value;
-                    let meta = document.getElementById('swal-meta').value;
                     let despesa = document.getElementById('swal-despesa').value;
-                    let teto = document.getElementById('swal-teto').value;
 
                     if (!empresa) { Swal.showValidationMessage('Selecione uma empresa'); return false; }
                     if (!unidade) { Swal.showValidationMessage('Selecione uma unidade'); return false; }
@@ -312,9 +282,7 @@ function abrirModal(id) {
                         idSubUnidade: document.getElementById('swal-subunidade').value || '',
                         mesReferencia: mes,
                         receitaProjetada: receita,
-                        metaReceita: meta,
                         despesaProjetada: despesa,
-                        tetoDespesa: teto,
                         observacoes: document.getElementById('swal-obs').value
                     };
                 }
@@ -342,12 +310,28 @@ function abrirModal(id) {
 }
 
 let carregarUnidadesModal = function (empresaId) {
-    return carregarUnidades(empresaId, 'swal-unidade').then(() => {
-        let sub = document.getElementById('swal-subunidade');
-        sub.innerHTML = '<option value="">Sem subunidade</option>';
-        $(sub).trigger('change');
-    });
+    return carregarUnidades(empresaId, 'swal-unidade');
 };
+
+function carregarSubUnidades(unidadeId, selectId) {
+    let select = document.getElementById(selectId);
+    select.innerHTML = '<option value="">Carregando...</option>';
+    if (!unidadeId) {
+        select.innerHTML = '<option value="">Sem subunidade</option>';
+        $(select).trigger('change');
+        return Promise.resolve();
+    }
+    return fetch(siteUrl + 'projetadoRealizado/listarSubUnidadesPorUnidade?idUnidade=' + unidadeId)
+        .then(res => res.json())
+        .then(res => {
+            let opts = '<option value="">Sem subunidade</option>';
+            res.data.forEach(s => {
+                opts += '<option value="' + s.idSubUnidade + '">' + s.nomeSubUnidade + '</option>';
+            });
+            select.innerHTML = opts;
+            $(select).trigger('change');
+        });
+}
 
 let carregarSubUnidadesModal = function (unidadeId) {
     return carregarSubUnidades(unidadeId, 'swal-subunidade');
@@ -366,9 +350,7 @@ function carregarDadosEdicao(id, popup) {
             });
             $('#swal-mes').val(d.mesReferencia || '');
             $('#swal-receita').val(formatMoneyInput(String(d.receitaProjetada || 0)));
-            $('#swal-meta').val(formatMoneyInput(String(d.metaReceita || 0)));
             $('#swal-despesa').val(formatMoneyInput(String(d.despesaProjetada || 0)));
-            $('#swal-teto').val(formatMoneyInput(String(d.tetoDespesa || 0)));
             $('#swal-obs').val(d.observacoes || '');
         });
 }

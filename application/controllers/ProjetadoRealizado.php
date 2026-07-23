@@ -40,23 +40,24 @@ class ProjetadoRealizado extends MY_Controller
     {
         $id = $this->input->post('id');
 
-        $receita = $this->input->post('receitaProjetada');
-        $meta = $this->input->post('metaReceita');
-        $despesa = $this->input->post('despesaProjetada');
-        $teto = $this->input->post('tetoDespesa');
-
         $data = [
             'idUsuarios' => $this->session->userdata('id'),
             'idEmpresa' => $this->input->post('idEmpresa'),
             'idUnidade' => $this->input->post('idUnidade'),
             'idSubUnidade' => $this->input->post('idSubUnidade') ?: null,
             'mesReferencia' => $this->input->post('mesReferencia'),
-            'receitaProjetada' => $this->formatDecimal($receita),
-            'metaReceita' => $this->formatDecimal($meta),
-            'despesaProjetada' => $this->formatDecimal($despesa),
-            'tetoDespesa' => $this->formatDecimal($teto),
+            'receitaProjetada' => $this->formatDecimal($this->input->post('receitaProjetada')),
+            'despesaProjetada' => $this->formatDecimal($this->input->post('despesaProjetada')),
             'observacoes' => $this->input->post('observacoes'),
         ];
+
+        // preserva metaReceita/tetoDespesa se enviados (Metas Financeiras) ou mantém os existentes
+        if ($this->input->post('metaReceita') !== null) {
+            $data['metaReceita'] = $this->formatDecimal($this->input->post('metaReceita'));
+        }
+        if ($this->input->post('tetoDespesa') !== null) {
+            $data['tetoDespesa'] = $this->formatDecimal($this->input->post('tetoDespesa'));
+        }
 
         if ($id) {
             $this->ProjetadoRealizado_model->edit('projetado_realizado', $data, 'idProjReal', $id);
