@@ -632,4 +632,113 @@ class Mapos extends MY_Controller
         echo json_encode($agendamentos_filtrados);
         exit;
     }
+
+    public function getDadosDashboardExecutivo()
+    {
+        $this->load->model('dashboardExecutivo_model');
+
+        $periodo = $this->input->get('periodo') ?: 'mensal';
+        $dataFim = date('Y-m-d');
+
+        if ($periodo === 'anual') {
+            $dataInicio = date('Y-m-d', strtotime('-12 months'));
+        } elseif ($periodo === 'trimestral') {
+            $dataInicio = date('Y-m-d', strtotime('-3 months'));
+        } else {
+            $dataInicio = date('Y-m-01');
+        }
+
+        $infos = $this->dashboardExecutivo_model->getInfosGrupo();
+        $saldo = $this->dashboardExecutivo_model->getSaldoEmCaixa();
+        $apagarHoje = $this->dashboardExecutivo_model->getAPagarHoje();
+        $lucro = $this->dashboardExecutivo_model->getLucroLiquido($dataInicio, $dataFim);
+        $inadimplencia = $this->dashboardExecutivo_model->getInadimplencia();
+        $faturamento = $this->dashboardExecutivo_model->getFaturamentoMensal(12);
+        $projetado = $this->dashboardExecutivo_model->getProjetado30D();
+        $alertas = $this->dashboardExecutivo_model->getAlertasCriticos();
+        $meta = $this->dashboardExecutivo_model->getMetaMensal();
+        $unidades = $this->dashboardExecutivo_model->getResultadoPorUnidade($dataInicio, $dataFim);
+        $saldoComp = $this->dashboardExecutivo_model->getSaldoComparativo();
+        $saldoMensal = $this->dashboardExecutivo_model->getSaldoMensalUltimosMeses(6);
+
+        $inadPercent = 0;
+        $carteiraTotal = (float)$inadimplencia->totalCarteira + (float)$inadimplencia->totalVencido;
+        if ($carteiraTotal > 0) {
+            $inadPercent = round(((float)$inadimplencia->totalVencido / $carteiraTotal) * 100, 1);
+        }
+
+        echo json_encode([
+            'infos' => $infos,
+            'saldoCaixa' => $saldo->total,
+            'apagarHoje' => $apagarHoje,
+            'lucro' => $lucro,
+            'inadimplencia' => [
+                'totalVencido' => $inadimplencia->totalVencido,
+                'totalCarteira' => $carteiraTotal,
+                'qtdVencidos' => $inadimplencia->qtdVencidos,
+                'percentual' => $inadPercent,
+            ],
+            'faturamento' => $faturamento,
+            'projetado' => $projetado,
+            'alertas' => $alertas,
+            'meta' => $meta,
+            'unidades' => $unidades,
+            'saldoComparativo' => $saldoComp,
+            'saldoMensal' => $saldoMensal,
+        ]);
+    }
+
+    public function exportarCSVDashboard()
+    {
+        $this->load->model('dashboardExecutivo_model');
+
+        $periodo = $this->input->get('periodo') ?: 'mensal';
+        $dataFim = date('Y-m-d');
+
+        if ($periodo === 'anual') {
+            $dataInicio = date('Y-m-d', strtotime('-12 months'));
+        } elseif ($periodo === 'trimestral') {
+            $dataInicio = date('Y-m-d', strtotime('-3 months'));
+        } else {
+            $dataInicio = date('Y-m-01');
+        }
+
+        $unidades = $this->dashboardExecutivo_model->getResultadoPorUnidade($dataInicio, $dataFim);
+        $lucro = $this->dashboardExecutivo_model->getLucroLiquido($dataInicio, $dataFim);
+        $faturamento = $this->dashboardExecutivo_model->getFaturamentoMensal(12);
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="dashboard_executivo_' . $periodo . '.csv"');
+
+        $output = fopen('php://output', 'w');
+        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+        fputcsv($output, ['Dashboard Executivo - ' . strtoupper($periodo), '', '', '']);
+        fputcsv($output, ['Período', $dataInicio, 'até', $dataFim]);
+        fputcsv($output, []);
+        fputcsv($output, ['Indicador', 'Valor', '', '']);
+        fputcsv($output, ['Lucro Líquido', number_format($lucro->lucro, 2, ',', '.'), 'Margem', $lucro->margem . '%']);
+        fputcsv($output, []);
+        fputcsv($output, ['Unidade', 'Receita', 'Despesa', 'Resultado']);
+        if ($unidades) {
+            foreach ($unidades as $u) {
+                fputcsv($output, [
+                    $u->nomeUnidade,
+                    number_format($u->receita, 2, ',', '.'),
+                    number_format($u->despesa, 2, ',', '.'),
+                    number_format($u->receita - $u->despesa, 2, ',', '.'),
+                ]);
+            }
+        }
+        fputcsv($output, []);
+        fputcsv($output, ['Faturamento Mensal', '', '', '']);
+        if ($faturamento && isset($faturamento->labels)) {
+            foreach ($faturamento->labels as $i => $label) {
+                fputcsv($output, [$label, number_format($faturamento->values[$i] ?? 0, 2, ',', '.'), '', '']);
+            }
+        }
+
+        fclose($output);
+        exit;
+    }
 }

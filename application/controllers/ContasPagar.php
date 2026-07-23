@@ -62,6 +62,7 @@ class ContasPagar extends MY_Controller
             'unidade' => $this->input->post('unidade'),
             'idCategoria' => $this->input->post('idCategoria') ?: null,
             'observacoes' => $this->input->post('observacoes'),
+            'status' => 'pendente',
         ];
 
         if ($id) {
