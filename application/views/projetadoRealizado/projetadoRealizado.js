@@ -103,11 +103,23 @@ function carregarProjReal() {
             if (mes) dados = dados.filter(d => d.mesReferencia === mes);
             if (empresa) dados = dados.filter(d => String(d.idEmpresa) === String(empresa));
 
+            let coresEmpresa = {};
+            dados.forEach(function (d) {
+                if (!coresEmpresa[d.idEmpresa]) {
+                    let id = String(d.idEmpresa);
+                    if (id === '1') coresEmpresa[d.idEmpresa] = '#5358ee';
+                    else if (id === '2') coresEmpresa[d.idEmpresa] = '#4cd676';
+                    else if (id === '3') coresEmpresa[d.idEmpresa] = '#ffc31a';
+                    else coresEmpresa[d.idEmpresa] = '#ff5453';
+                }
+            });
+
             let html = '';
             dados.forEach(d => {
+                let cor = coresEmpresa[d.idEmpresa] || '#4cd676';
                 html += '<tr>' +
                     '<td>' + (d.nomeUnidade || '—') + '</td>' +
-                    '<td>' + (d.nomeEmpresa || '—') + '</td>' +
+                    '<td><i class="fa fa-circle" style="font-size:10px;color:' + cor + ';margin-left:-1%;margin-top:3px;"></i>&nbsp;' + (d.nomeEmpresa || '—') + '</td>' +
                     '<td>' + formatMoney(d.receitaProjetada) + '</td>' +
                     '<td>R$ 0,00</td>' +
                     '<td>' + formatMoney(d.metaReceita) + '</td>' +
@@ -168,13 +180,17 @@ function atualizarGridEmpresas(dados) {
     });
 
     let html = '';
-    let cores = ['#4cd676', '#ff5453', '#ffc31a', '#5358ee'];
     let i = 0;
     for (let id in empresas) {
         let e = empresas[id];
+        let cor;
+        if (String(id) === '1') cor = '#5358ee';
+        else if (String(id) === '2') cor = '#4cd676';
+        else if (String(id) === '3') cor = '#ffc31a';
+        else cor = '#ff5453';
         let perc = e.meta > 0 ? Math.min((e.recProj / e.meta) * 100, 100) : 0;
         html += '<div class="company">' +
-            '<strong class="label"><i class="fa fa-circle" style="font-size:10px;color:' + cores[i % 4] + ';margin-left: -1%;margin-top: 3px;"></i>&nbsp;' + e.nome.toUpperCase() + '</strong>' +
+            '<strong class="label"><i class="fa fa-circle" style="font-size:10px;color:' + cor + ';margin-left: -1%;margin-top: 3px;"></i>&nbsp;' + e.nome.toUpperCase() + '</strong>' +
             '<div class="value">' + formatMoney(e.recProj) + '</div>' +
             '<div class="muted">Meta ' + formatMoney(e.meta) + ' · ' + perc.toFixed(0) + '%</div>' +
             '<div class="bar"><div style="width:' + perc + '%"></div></div>' +

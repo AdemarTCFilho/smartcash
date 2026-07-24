@@ -16,12 +16,12 @@ document.addEventListener('DOMContentLoaded', function () {
         importarCSV(e.target.files[0]);
     });
 
-    document.getElementById('filtroMes').addEventListener('change', function () {
+    $('#filtroMes').on('change', function () {
         carregarContasReceber();
         carregarDashboard();
     });
 
-    document.getElementById('filtroEmpresa').addEventListener('change', function () {
+    $('#filtroEmpresa').on('change', function () {
         carregarContasReceber();
         carregarDashboard();
     });
@@ -83,7 +83,12 @@ function carregarEmpresas() {
             res.data.forEach(e => {
                 opts += '<option value="' + e.idEmpresa + '">' + e.nomeEmpresa + '</option>';
             });
-            document.getElementById('filtroEmpresa').innerHTML = opts;
+            let sel = document.getElementById('filtroEmpresa');
+            sel.innerHTML = opts;
+            if (typeof $ !== 'undefined' && $.fn.select2) {
+                if ($(sel).data('select2')) $(sel).select2('destroy');
+                $(sel).select2({ width: '200px', placeholder: 'Todas as empresas', allowClear: true });
+            }
         });
 }
 

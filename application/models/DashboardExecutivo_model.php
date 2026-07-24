@@ -26,17 +26,15 @@ class DashboardExecutivo_model extends CI_Model
     public function getLucroLiquido($dataInicio, $dataFim)
     {
         $entradas = $this->db->query("
-            SELECT COALESCE(SUM(valorRecebido), 0) as total
+            SELECT COALESCE(SUM(valor), 0) as total
             FROM contas_receber
-            WHERE status = 'liquidado'
-                AND dataRecebimento BETWEEN ? AND ?
+            WHERE vencimento BETWEEN ? AND ?
         ", [$dataInicio, $dataFim])->row();
 
         $saidas = $this->db->query("
-            SELECT COALESCE(SUM(valorPago), 0) as total
+            SELECT COALESCE(SUM(valor), 0) as total
             FROM contas_pagar
-            WHERE status = 'liquidado'
-                AND dataPagamento BETWEEN ? AND ?
+            WHERE vencimento BETWEEN ? AND ?
         ", [$dataInicio, $dataFim])->row();
 
         $lucro = (float)$entradas->total - (float)$saidas->total;
@@ -72,12 +70,11 @@ class DashboardExecutivo_model extends CI_Model
         }
 
         $result = $this->db->query("
-            SELECT DATE_FORMAT(dataRecebimento, '%Y-%m') as mes,
-                   COALESCE(SUM(valorRecebido), 0) as total
+            SELECT DATE_FORMAT(vencimento, '%Y-%m') as mes,
+                   COALESCE(SUM(valor), 0) as total
             FROM contas_receber
-            WHERE status = 'liquidado'
-                AND dataRecebimento >= ?
-            GROUP BY DATE_FORMAT(dataRecebimento, '%Y-%m')
+            WHERE vencimento >= ?
+            GROUP BY DATE_FORMAT(vencimento, '%Y-%m')
             ORDER BY mes ASC
         ", [date('Y-m-d', strtotime('-' . ($meses - 1) . ' months'))])->result();
 
@@ -141,13 +138,12 @@ class DashboardExecutivo_model extends CI_Model
     public function getMetaMensal()
     {
         $ultimos3 = $this->db->query("
-            SELECT DATE_FORMAT(dataRecebimento, '%Y-%m') as mes,
-                   COALESCE(SUM(valorRecebido), 0) as total
+            SELECT DATE_FORMAT(vencimento, '%Y-%m') as mes,
+                   COALESCE(SUM(valor), 0) as total
             FROM contas_receber
-            WHERE status = 'liquidado'
-                AND dataRecebimento >= DATE_SUB(CURDATE(), INTERVAL 4 MONTH)
-                AND dataRecebimento < DATE_FORMAT(CURDATE(), '%Y-%m-01')
-            GROUP BY DATE_FORMAT(dataRecebimento, '%Y-%m')
+            WHERE vencimento >= DATE_SUB(CURDATE(), INTERVAL 4 MONTH)
+                AND vencimento < DATE_FORMAT(CURDATE(), '%Y-%m-01')
+            GROUP BY DATE_FORMAT(vencimento, '%Y-%m')
             ORDER BY mes DESC
             LIMIT 3
         ")->result();
@@ -167,10 +163,9 @@ class DashboardExecutivo_model extends CI_Model
         $meta = $media * 1.05;
 
         $mesAtual = $this->db->query("
-            SELECT COALESCE(SUM(valorRecebido), 0) as total
+            SELECT COALESCE(SUM(valor), 0) as total
             FROM contas_receber
-            WHERE status = 'liquidado'
-                AND DATE_FORMAT(dataRecebimento, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')
+            WHERE DATE_FORMAT(vencimento, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')
         ")->row();
 
         $realizado = (float)$mesAtual->total;
@@ -188,18 +183,22 @@ class DashboardExecutivo_model extends CI_Model
     {
         return $this->db->query("
             SELECT
-                unidade.nomeUnidade,
-                COALESCE(SUM(contas_receber.valorRecebido), 0) as receita,
-                COALESCE(SUM(contas_pagar.valorPago), 0) as despesa
-            FROM unidade
-            LEFT JOIN contas_receber ON contas_receber.idUnidade = unidade.idUnidade
-                AND contas_receber.status = 'liquidado'
-                AND contas_receber.dataRecebimento BETWEEN ? AND ?
-            LEFT JOIN contas_pagar ON contas_pagar.idUnidade = unidade.idUnidade
-                AND contas_pagar.status = 'liquidado'
-                AND contas_pagar.dataPagamento BETWEEN ? AND ?
-            WHERE unidade.status = 1
-            GROUP BY unidade.idUnidade
+                u.nomeUnidade,
+                COALESCE((
+                    SELECT SUM(cr.valor)
+                    FROM contas_receber cr
+                    WHERE cr.idUnidade = u.idUnidade
+                      AND cr.vencimento BETWEEN ? AND ?
+                ), 0) as receita,
+                COALESCE((
+                    SELECT SUM(cp.valor)
+                    FROM contas_pagar cp
+                    WHERE cp.idUnidade = u.idUnidade
+                      AND cp.vencimento BETWEEN ? AND ?
+                ), 0) as despesa
+            FROM unidade u
+            WHERE u.status = 1
+            GROUP BY u.idUnidade
             ORDER BY receita DESC
         ", [$dataInicio, $dataFim, $dataInicio, $dataFim])->result();
     }
@@ -219,11 +218,11 @@ class DashboardExecutivo_model extends CI_Model
         $mesAtual = $this->db->query("
             SELECT COALESCE(SUM(valor), 0) - COALESCE(SUM(pago), 0) as saldo
             FROM (
-                SELECT dataRecebimento as data, valorRecebido as valor, 0 as pago
-                FROM contas_receber WHERE status = 'liquidado'
+                SELECT vencimento as data, valor as valor, 0 as pago
+                FROM contas_receber
                 UNION ALL
-                SELECT dataPagamento as data, 0 as recebido, valorPago as pago
-                FROM contas_pagar WHERE status = 'liquidado'
+                SELECT vencimento as data, 0 as recebido, valor as pago
+                FROM contas_pagar
             ) m
             WHERE DATE_FORMAT(data, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')
         ")->row();
@@ -231,11 +230,11 @@ class DashboardExecutivo_model extends CI_Model
         $mesAnterior = $this->db->query("
             SELECT COALESCE(SUM(valor), 0) - COALESCE(SUM(pago), 0) as saldo
             FROM (
-                SELECT dataRecebimento as data, valorRecebido as valor, 0 as pago
-                FROM contas_receber WHERE status = 'liquidado'
+                SELECT vencimento as data, valor as valor, 0 as pago
+                FROM contas_receber
                 UNION ALL
-                SELECT dataPagamento as data, 0 as recebido, valorPago as pago
-                FROM contas_pagar WHERE status = 'liquidado'
+                SELECT vencimento as data, 0 as recebido, valor as pago
+                FROM contas_pagar
             ) m
             WHERE DATE_FORMAT(data, '%Y-%m') = DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m')
         ")->row();
@@ -260,15 +259,15 @@ class DashboardExecutivo_model extends CI_Model
 
         $result = $this->db->query("
             SELECT mes, SUM(saldo) as total FROM (
-                SELECT DATE_FORMAT(dataRecebimento, '%Y-%m') as mes,
-                       SUM(valorRecebido) as saldo
-                FROM contas_receber WHERE status = 'liquidado'
-                GROUP BY DATE_FORMAT(dataRecebimento, '%Y-%m')
+                SELECT DATE_FORMAT(vencimento, '%Y-%m') as mes,
+                       SUM(valor) as saldo
+                FROM contas_receber
+                GROUP BY DATE_FORMAT(vencimento, '%Y-%m')
                 UNION ALL
-                SELECT DATE_FORMAT(dataPagamento, '%Y-%m') as mes,
-                       -SUM(valorPago) as saldo
-                FROM contas_pagar WHERE status = 'liquidado'
-                GROUP BY DATE_FORMAT(dataPagamento, '%Y-%m')
+                SELECT DATE_FORMAT(vencimento, '%Y-%m') as mes,
+                       -SUM(valor) as saldo
+                FROM contas_pagar
+                GROUP BY DATE_FORMAT(vencimento, '%Y-%m')
             ) m
             GROUP BY mes
             ORDER BY mes ASC

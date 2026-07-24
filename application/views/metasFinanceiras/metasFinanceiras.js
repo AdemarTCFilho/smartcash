@@ -110,14 +110,16 @@ function atualizarCards(c) {
 }
 
 var coresEmpresa = {};
-var coresLista = ['#5865ff', '#42ef83', '#ff5c67', '#ffc82d', '#6671ff'];
 
 function preencherTabela(metas) {
     coresEmpresa = {};
-    var idxCor = 0;
     metas.forEach(function (m) {
         if (!coresEmpresa[m.idEmpresa]) {
-            coresEmpresa[m.idEmpresa] = coresLista[idxCor++ % coresLista.length];
+            var id = String(m.idEmpresa);
+            if (id === '1') coresEmpresa[m.idEmpresa] = '#5358ee';
+            else if (id === '2') coresEmpresa[m.idEmpresa] = '#4cd676';
+            else if (id === '3') coresEmpresa[m.idEmpresa] = '#ffc31a';
+            else coresEmpresa[m.idEmpresa] = '#ff5c67';
         }
     });
 
@@ -133,7 +135,7 @@ function preencherTabela(metas) {
 
         html += '<tr>' +
             '<td><b>' + (m.nomeUnidade || '—') + '</b></td>' +
-            '<td><span class="dot" style="background:' + cor + '"></span>' + (m.nomeEmpresa || '—') + '</td>' +
+            '<td><i class="fa fa-circle" style="font-size:10px;color:' + cor + ';margin-left:-1%;margin-top:3px;"></i>&nbsp;' + (m.nomeEmpresa || '—') + '</td>' +
             '<td>' + formatMoney(rec) + '</td>' +
             '<td>' + formatMoney(desp) + '</td>' +
             '<td class="green">' + formatMoney(lucro) + '</td>' +
