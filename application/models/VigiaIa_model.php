@@ -1,55 +1,75 @@
 <?php
 class VigiaIa_model extends CI_Model
 {
+    private function getIntervalCondition($dias)
+    {
+        if ($dias !== null && $dias !== '') {
+            return "created_at >= DATE_SUB(NOW(), INTERVAL " . intval($dias) . " DAY)";
+        }
+        return "1=1";
+    }
+
     public function getIndicadores($dias = 7)
     {
-        $this->db->select("
-            (SELECT COUNT(*) FROM vigia_logs WHERE status='falha' AND created_at >= DATE_SUB(NOW(), INTERVAL $dias DAY)) as tentativas_bloqueadas,
-            (SELECT COUNT(*) FROM usuarios WHERE dataCadastro >= DATE_SUB(CURDATE(), INTERVAL $dias DAY)) as novos_cadastros,
-            (SELECT COUNT(*) FROM vigia_eventos WHERE severidade IN ('medio','alto','critico') AND created_at >= DATE_SUB(NOW(), INTERVAL $dias DAY)) as acessos_suspeitos,
-            (SELECT COUNT(DISTINCT pais) FROM vigia_logs WHERE pais IS NOT NULL AND pais != '' AND pais != 'Desconhecido' AND created_at >= DATE_SUB(NOW(), INTERVAL $dias DAY)) as paises_que_acessaram
-        ");
-        return $this->db->get()->row();
+        $cond = $this->getIntervalCondition($dias);
+        $sql = "SELECT
+                    (SELECT COUNT(*) FROM vigia_logs WHERE status='falha' AND $cond) as tentativas_bloqueadas,
+                    (SELECT COUNT(*) FROM usuarios WHERE dataCadastro >= DATE_SUB(CURDATE(), INTERVAL " . intval($dias ?? 7) . " DAY)) as novos_cadastros,
+                    (SELECT COUNT(*) FROM vigia_eventos WHERE severidade IN ('medio','alto','critico') AND $cond) as acessos_suspeitos,
+                    (SELECT COUNT(DISTINCT pais) FROM vigia_logs WHERE pais IS NOT NULL AND pais != '' AND pais != 'Desconhecido' AND $cond) as paises_que_acessaram
+                ";
+        $q = $this->db->query($sql);
+        if (!$q) return (object) ['tentativas_bloqueadas' => 0, 'novos_cadastros' => 0, 'acessos_suspeitos' => 0, 'paises_que_acessaram' => 0];
+        return $q->row();
     }
 
     public function getLoginsPorDia($dias = 7)
     {
+        $cond = $this->getIntervalCondition($dias);
         $sql = "SELECT
                     DATE(created_at) as dia,
                     SUM(CASE WHEN status='sucesso' THEN 1 ELSE 0 END) as sucesso,
                     SUM(CASE WHEN status='falha' THEN 1 ELSE 0 END) as falha
                 FROM vigia_logs
-                WHERE created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)
+                WHERE $cond
                 GROUP BY DATE(created_at)
                 ORDER BY dia ASC";
-        return $this->db->query($sql, [$dias])->result();
+        $q = $this->db->query($sql);
+        if (!$q) return [];
+        return $q->result();
     }
 
     public function getTopPaises($dias = 7, $limite = 5)
     {
+        $cond = $this->getIntervalCondition($dias);
         $sql = "SELECT
                     COALESCE(NULLIF(pais,''), 'Desconhecido') as pais,
                     COUNT(*) as total
                 FROM vigia_logs
-                WHERE created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)
+                WHERE $cond
                 GROUP BY pais
                 ORDER BY total DESC
-                LIMIT ?";
-        return $this->db->query($sql, [$dias, $limite])->result();
+                LIMIT " . intval($limite);
+        $q = $this->db->query($sql);
+        if (!$q) return [];
+        return $q->result();
     }
 
     public function getIpsMaisFalhas($dias = 7, $limite = 10)
     {
+        $cond = $this->getIntervalCondition($dias);
         $sql = "SELECT
                     ip,
                     COALESCE(NULLIF(pais,''), 'Desconhecido') as pais,
                     COUNT(*) as tentativas
                 FROM vigia_logs
-                WHERE status='falha' AND created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)
+                WHERE status='falha' AND $cond
                 GROUP BY ip
                 ORDER BY tentativas DESC
-                LIMIT ?";
-        return $this->db->query($sql, [$dias, $limite])->result();
+                LIMIT " . intval($limite);
+        $q = $this->db->query($sql);
+        if (!$q) return [];
+        return $q->result();
     }
 
     public function getAlertasCriticos($limite = 20)

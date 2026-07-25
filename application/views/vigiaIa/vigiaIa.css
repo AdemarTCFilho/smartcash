@@ -190,6 +190,7 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
+    color: #fff;
 }
 .table-mini th {
     text-align: left;

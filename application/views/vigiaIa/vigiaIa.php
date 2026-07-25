@@ -14,8 +14,8 @@
                 <option value="30">Últimos 30 dias</option>
                 <option value="custom">Personalizado</option>
             </select>
-            <input type="date" id="data-inicio" style="display:none">
-            <input type="date" id="data-fim" style="display:none">
+            <input type="date" id="data-inicio" style="display:none;margin-bottom: 0%;">
+            <input type="date" id="data-fim" style="display:none;margin-bottom: 0%;">
             <button id="btnExportarCSV" class="btn-outline"><i class="fa fa-download"></i> CSV</button>
         </div>
     </div>
