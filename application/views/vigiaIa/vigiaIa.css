@@ -215,6 +215,10 @@
 .tablewrap::-webkit-scrollbar-track { background: transparent; }
 .tablewrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
+table {
+    color: #fff;
+}
+
 .badge-falha {
     background: var(--vigia-danger-bg);
     color: var(--vigia-danger);
