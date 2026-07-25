@@ -219,6 +219,10 @@ table {
     color: #fff;
 }
 
+.status-label {
+   color: #fff; 
+}
+
 .badge-falha {
     background: var(--vigia-danger-bg);
     color: var(--vigia-danger);
