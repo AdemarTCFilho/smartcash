@@ -2,11 +2,11 @@
 class BoardExecutivo_model extends CI_Model
 {
     private $executivos = [
-        'CFO' => ['nome' => 'Carlos Mendes', 'cargo' => 'Chief Financial Officer', 'cor' => '#ff6b6b', 'icone' => 'fa-calculator'],
-        'COO' => ['nome' => 'Ana Oliveira',  'cargo' => 'Chief Operating Officer', 'cor' => '#4ecdc4', 'icone' => 'fa-cogs'],
-        'CMO' => ['nome' => 'Rafael Torres', 'cargo' => 'Chief Marketing Officer',  'cor' => '#45b7d1', 'icone' => 'fa-bullhorn'],
-        'CHRO' => ['nome' => 'Juliana Costa','cargo' => 'Chief Human Resources Officer','cor' => '#96ceb4','icone' => 'fa-users'],
-        'CEO' => ['nome' => 'Eduardo Alves','cargo' => 'Chief Executive Officer',  'cor' => '#ffeaa7','icone' => 'fa-star'],
+        'HV' => ['nome' => 'Helena Vasconcelos', 'cargo' => 'CFO', 'cor' => '#a855f7', 'icone' => 'fa-compass'],
+        'BT' => ['nome' => 'Bruno Tavares',      'cargo' => 'COO', 'cor' => '#3b82f6', 'icone' => 'fa-microchip'],
+        'PL' => ['nome' => 'Patrícia Lemos',     'cargo' => 'CMO', 'cor' => '#22c55e', 'icone' => 'fa-chart-line'],
+        'DR' => ['nome' => 'Daniel Ribeiro',     'cargo' => 'CHRO', 'cor' => '#f59e0b', 'icone' => 'fa-shield'],
+        'RM' => ['nome' => 'Ricardo Monteiro',   'cargo' => 'CEO', 'cor' => '#ec4899', 'icone' => 'fa-crown'],
     ];
 
     public function getExecutivos()
@@ -111,47 +111,47 @@ class BoardExecutivo_model extends CI_Model
         $paisesStr = $metricas['topPaises'];
         $alertasStr = $metricas['alertas'];
 
-        $ordem = ['CFO', 'COO', 'CMO', 'CHRO', 'CEO'];
+        $ordem = ['HV', 'BT', 'PL', 'DR', 'RM'];
 
         // RODADA 1 — Parecer inicial
         $pareceres = [
-            'CFO' => function () use ($pauta, $tentativas) {
+            'HV' => function () use ($pauta, $tentativas, $suspeitos) {
                 $opinioes = [
-                    "Considerando que tivemos $tentativas tentativas de bloqueio no período, precisamos avaliar o custo-benefício de cada medida. Minha preocupação é com o impacto financeiro. Sugiro priorizarmos soluções com retorno mensurável.",
-                    "Analisando os números — $tentativas bloqueios registrados — entendo que investir em segurança é necessário, mas precisamos de um plano com métricas claras de ROI. Minha sugestão é começarmos com bloqueios automáticos que já mostraram eficácia.",
-                    "Do ponto de vista financeiro, cada tentativa de invasão representa um risco de perda. Com $tentativas bloqueios no período, o custo da inação supera o investimento em prevenção. Defendo um aporte gradual em ferramentas de segurança.",
+                    "Com $tentativas tentativas bloqueadas e $suspeitos acessos suspeitos, nossa estratégia de expansão precisa considerar a segurança como pilar. Sugiro que antes de abrir novas frentes, consolidemos a proteção dos ativos atuais com bloqueios automatizados.",
+                    "Analisando o cenário — $tentativas bloqueios no período — entendo que investir em segurança hoje viabiliza o crescimento amanhã. Minha visão é priorizarmos automação de bloqueios como base para expansão segura.",
+                    "Cada tentativa de invasão é um risco à nossa reputação no mercado. Proponho que aloquemos parte do orçamento de expansão para segurança ofensiva — isso nos diferencia como uma empresa que cresce com responsabilidade.",
                 ];
                 return $opinioes[array_rand($opinioes)];
             },
-            'COO' => function () use ($pauta, $suspeitos, $tentativas) {
+            'BT' => function () use ($pauta, $suspeitos, $tentativas) {
                 $opinioes = [
-                    "Operacionalmente, os $suspeitos acessos suspeitos indicam que nossos processos de autenticação precisam de revisão. Suporte já reporta sobrecarga com alerts. Precisamos de automação nos bloqueios para desafogar a equipe.",
-                    "Com $tentativas tentativas bloqueadas e $suspeitos acessos suspeitos, a operação está no limite. Sugiro implementarmos autenticação multifator como camada adicional — isso reduziria significativamente os alerts manuais.",
-                    "Nossa equipe operacional gastou horas significativas analisando $suspeitos eventos suspeitos. Precisamos de um sistema que faça esse filtro automaticamente. MFA + bloqueio automático é o caminho.",
+                    "Do ponto de vista tecnológico, os $suspeitos eventos suspeitos são um sinal claro de que nossa autenticação precisa evoluir. Defendo a implementação de MFA combinada com análise comportamental baseada em IA para reduzir falsos positivos.",
+                    "Com $tentativas tentativas rejeitadas e $suspeitos alerts manuais, nossa equipe de tecnologia está sobrecarregada. Minha proposta: automação inteligente dos bloqueios + MFA como camada adicional, com rollout em 30 dias.",
+                    "Tecnicamente, o mais eficaz é implementar um web application firewall (WAF) com regras dinâmicas e MFA. Isso reduziria drasticamente os $suspeitos acessos suspeitos e liberaria a equipe para inovação.",
                 ];
                 return $opinioes[array_rand($opinioes)];
             },
-            'CMO' => function () use ($pauta, $paises, $paisesStr) {
+            'PL' => function () use ($pauta, $paises, $paisesStr, $tentativas) {
                 $opinioes = [
-                    "Com $paises países diferentes acessando o sistema, sendo os principais: $paisesStr, precisamos garantir que a experiência do usuário não seja comprometida. Bloqueios muito agressivos podem impactar clientes legítimos.",
-                    "A presença de $paises países distintos ($paisesStr) mostra que estamos ganhando visibilidade internacional, mas também atraindo atenção indesejada. Minha preocupação é equilibrar segurança com usabilidade.",
-                    "Precisamos comunicar claramente qualquer mudança nos processos de login para não gerar atrito com usuários legítimos. Sugiro campanha interna de conscientização sobre boas práticas de segurança.",
+                    "Operacionalmente, a variação de $paises países acessando ($paisesStr) exige processos robustos. Já com $tentativas tentativas bloqueadas, precisamos de um fluxo claro: bloqueio automático, notificação ao usuário e canal de recuperação simples.",
+                    "Meu foco é garantir que a operação não pare. $paises países distintos acessando ($paisesStr) significa complexidade operacional. Proponho implementarmos triagem automática com regras por país e horário.",
+                    "A operação já sente o impacto: $tentativas tentativas de acesso inválido geraram retrabalho. Precisamos de processos definidos — bloqueio, análise, liberação — com SLA claro para cada etapa.",
                 ];
                 return $opinioes[array_rand($opinioes)];
             },
-            'CHRO' => function () use ($pauta, $metricas) {
+            'DR' => function () use ($pauta, $metricas, $alertasStr) {
                 $opinioes = [
-                    "Precisamos treinar todos os colaboradores para identificar tentativas de phishing e ataques. Tecnologia sozinha não resolve — o fator humano é crítico. Sugiro workshop obrigatório de segurança da informação.",
-                    "Com o aumento de acessos suspeitos, nossos colaboradores precisam estar preparados. Proponho um programa de conscientização contínua, com simulações de phishing e treinamento trimestral.",
-                    "A segurança começa nas pessoas. Precisamos reforçar a cultura de segurança com políticas claras de senhas, autenticação em dois fatores para todos os sistemas e relatórios periódicos de conformidade.",
+                    "Riscos à vista. Com alertas como: $alertasStr, nossa exposição é real. Defendo uma abordagem de compliance preventivo — bloquear IPs suspeitos é obrigação regulatória, não opção. MFA deve ser implantado com urgência.",
+                    "Do ponto de vista de riscos, cada tentativa de invasão não bloqueada representa passivo. Precisamos de política clara de segurança da informação, aprovada pelo conselho, com responsabilidades definidas e auditoria periódica.",
+                    "Minha avaliação de risco é crítica. A frequência de acessos suspeitos exige ação imediata. Sugiro criação de comitê de segurança com reporte direto ao board e metas trimestrais de redução de incidentes.",
                 ];
                 return $opinioes[array_rand($opinioes)];
             },
-            'CEO' => function () use ($pauta, $tentativas, $suspeitos, $alertasStr) {
+            'RM' => function () use ($pauta, $tentativas, $suspeitos, $alertasStr) {
                 $opinioes = [
-                    "Excelentes contribuições. Com $tentativas tentativas bloqueadas e $suspeitos eventos suspeitos, está claro que precisamos agir. A pergunta é: qual a prioridade — bloqueios mais rigorosos ou MFA? Precisamos decidir como conselho.",
-                    "Os números ($tentativas bloqueios, $suspeitos eventos) falam por si. Meu entendimento é que ambas as frentes são necessárias, mas precisamos definir qual dará retorno mais rápido. Vou ouvir as réplicas antes de decidir.",
-                    "Estou inclinado a priorizar bloqueios automáticos como medida imediata, dado o volume $tentativas de tentativas. Mas quero ouvir as réplicas dos pares antes de bater o martelo.",
+                    "Excelentes contribuições, conselho. Com $tentativas tentativas bloqueadas e $suspeitos eventos suspeitos ($alertasStr), é evidente que precisamos agir. A pergunta que coloco: devemos priorizar bloqueios automatizados ou MFA? Vou ouvir as réplicas antes de decidir.",
+                    "Os números são claros: $tentativas bloqueios, $suspeitos eventos anômalos. Minha inclinação inicial é por bloqueios automáticos imediatos, mas quero ouvir a visão de cada um antes de bater o martelo.",
+                    "Este conselho foi convocado para decidir o futuro da nossa segurança digital. Com $suspeitos alertas em aberto e $tentativas tentativas rejeitadas, não podemos adiar. Decidirei após ouvir as réplicas dos pares.",
                 ];
                 return $opinioes[array_rand($opinioes)];
             },
@@ -169,42 +169,42 @@ class BoardExecutivo_model extends CI_Model
 
         // RODADA 2 — Réplica
         $replicas = [
-            'CFO' => function () use ($metricas) {
+            'HV' => function () use ($metricas) {
                 $opinioes = [
-                    "Após ouvir os colegas, reforço que a análise de custo-benefício precisa ser nossa bússola. Concordo com a Ana (COO) que a automação é prioritária — reduz custos operacionais. E com a Juliana (CHRO) que treinamento é essencial, mas sugiro escalonar em fases.",
-                    "Boa ponderação do Rafael sobre experiência do usuário. Minha contraproposta: implementamos MFA apenas para acessos externos primeiro, enquanto mantemos bloqueios automáticos para IPs suspeitos. Isso equilibra segurança e custo.",
-                    "Concordo com a abordagem em fases. Primeiro, bloqueios automáticos (custo baixo, impacto alto). Depois, MFA para usuários administrativos. E paralelamente, o programa de treinamento que a Juliana sugeriu. Isso distribui o investimento.",
+                    "Após ouvir os pareceres, reforço que a estratégia de crescimento precisa de segurança sólida. Concordo com o Bruno (BT) que MFA é o caminho, e com a Paula (PL) que a operação não pode parar. Sugiro implementação em fases com comunicação clara.",
+                    "Boa ponderação do Diego sobre riscos. Minha visão: usemos os dados de $paises países acessando para criar zonas de confiança. Países de alto risco ganham bloqueio automático; os demais, MFA progressivo. Isso equilibra expansão e proteção.",
+                    "Concordo com a abordagem do BT em priorizar tecnologia, mas alinhada à estratégia: primeiro bloqueios automáticos (rápido, barato, impacto alto), depois MFA. Isso protege nossa expansão sem travá-la.",
                 ];
                 return $opinioes[array_rand($opinioes)];
             },
-            'COO' => function () use ($metricas) {
+            'BT' => function () use ($metricas) {
                 $opinioes = [
-                    "Reforçando meu ponto: automação é urgente. A equipe de operações está sobrecarregada. Se implementarmos bloqueios automáticos + MFA, liberamos capacidade para outras atividades estratégicas. Concordo com a abordagem do CFO em fases.",
-                    "O Rafael trouxe um ponto válido sobre usabilidade. Mas acredito que MFA bem implementado não compromete a experiência — é rápido e indolor. Já vi cases de sucesso em empresas do nosso porte.",
-                    "Minha réplica: prioridade máxima é automação dos bloqueios. Depois MFA. Em paralelo, treinamento. Não podemos fazer tudo ao mesmo tempo sem sobrecarregar a operação.",
+                    "Reforço: temos capacidade técnica para implementar MFA em 15 dias, não 30. Podemos fazer um piloto para a equipe interna e expandir. A tecnologia está madura — o desafio é gestão da mudança, não técnica.",
+                    "A Paula trouxe um ponto crucial sobre operação. Minha proposta técnica: WAF + MFA em paralelo. WAF bloqueia os ataques conhecidos automaticamente; MFA protege contra credenciais vazadas. As duas frentes são complementares, não concorrentes.",
+                    "Tecnicamente, não vejo conflito entre bloqueios e MFA. Podemos fazer ambos simultaneamente: WAF em 7 dias, MFA em 30. O investimento é baixo comparado ao risco de $tentativas tentativas no período.",
                 ];
                 return $opinioes[array_rand($opinioes)];
             },
-            'CMO' => function () use ($metricas) {
+            'PL' => function () use ($metricas) {
                 $opinioes = [
-                    "Entendo o senso de urgência de todos, mas reforço: qualquer mudança precisa ser comunicada com antecedência aos usuários. Sugiro implementarmos as medidas em ambiente controlado, com período de testes e comunicação clara.",
-                    "A Ana tem razão — MFA quando bem feito não atrapalha. Mas precisamos garantir que o processo de recuperação de acesso seja simples. Nada frustra mais o usuário que ficar preso fora do sistema.",
-                    "Minha sugestão: comunicado oficial 15 dias antes, tutorial passo a passo, e canal de suporte dedicado durante a transição. Isso minimiza o impacto na percepção dos usuários.",
+                    "Concordo com o Bruno que ambas as frentes são viáveis. Minha preocupação é operacional: precisamos de um plano de transição que não interrompa o negócio. Sugiro rollout gradual por unidade de negócio.",
+                    "A Helena falou em zonas de confiança — excelente ideia. Operacionalmente, podemos implementar por região: primeiro Brasil (maior base), depois expandir. Isso permite aprendizado e ajustes sem impacto global.",
+                    "Minha réplica: priorizar bloqueios automáticos (impacto imediato, baixo risco operacional) e planejar MFA para o próximo trimestre. Não podemos parar a operação enquanto implementamos segurança.",
                 ];
                 return $opinioes[array_rand($opinioes)];
             },
-            'CHRO' => function () use ($metricas) {
+            'DR' => function () use ($metricas, $alertasStr) {
                 $opinioes = [
-                    "Apoio a abordagem faseada do CFO. Meu acréscimo: o treinamento de segurança deve começar antes das mudanças técnicas, não depois. Preparar as pessoas primeiro reduz resistência e acelera a adoção.",
-                    "Excelente ponto do Rafael sobre comunicação. Vou alinhar com marketing para produzir materiais didáticos — vídeos curtos, infográficos e FAQ. Educação é a chave para o sucesso de qualquer mudança.",
-                    "Complementando: precisamos de métricas de adesão. Quantos colaboradores completaram o treinamento? Quantos ativaram MFA? Sem dados, não sabemos se a estratégia está funcionando.",
+                    "A sugestão do BT de WAF + MFA é tecnicamente sólida, mas do ponto de vista de riscos, precisamos de política e governança antes de tecnologia. Sem regras claras, a ferramenta não resolve. Proponho política de segurança aprovada neste board primeiro.",
+                    "Alertas como $alertasStr mostram que o risco é imediato. Minha posição: não podemos esperar. Bloqueios automáticos já, MFA o quanto antes, e construímos a governança em paralelo. O risco de não fazer é maior que o de fazer rápido.",
+                    "Reforço: toda medida de segurança precisa de rastreabilidade. Seja bloqueio automático ou MFA, precisamos de logs, auditoria e relatórios periódicos para este conselho. Sem métricas, não há governança.",
                 ];
                 return $opinioes[array_rand($opinioes)];
             },
         ];
 
         foreach ($ordem as $i => $sigla) {
-            if ($sigla === 'CEO') continue; // CEO não replica, ele decide
+            if ($sigla === 'RM') continue;
             $t += 2;
             $falas[] = [
                 'sigla' => $sigla,
@@ -217,13 +217,13 @@ class BoardExecutivo_model extends CI_Model
         // RODADA 3 — Decisão final do CEO
         $t += 3;
         $decisoes = [
-            "Após ouvir todos os conselheiros, minha decisão é: **Adotar bloqueios automáticos para IPs suspeitos como medida imediata** — começando hoje. Paralelamente, iniciamos a implementação de MFA para todos os usuários administrativos em até 30 dias. O programa de treinamento de segurança será lançado na próxima semana, liderado pelo CHRO em parceria com o CMO para comunicação. Que fique registrado: a segurança do nosso ecossistema digital é prioridade estratégica deste conselho.",
-            "Decisão final: **Implementar MFA para todos os acessos externos e administrativos em até 45 dias**, com bloqueios automáticos para IPs de países de alto risco (baseado no ranking que vimos). O COO liderará a automação com apoio do CFO para orçamento. O CMO e CHRO cuidarão da comunicação e treinamento. Esta é uma decisão unânime deste conselho.",
-            "Consolidando as contribuições: **Fase 1 (imediata)**: bloqueios automáticos para IPs suspeitos + revisão dos alertas críticos. **Fase 2 (30 dias)**: MFA para acessos administrativos. **Fase 3 (60 dias)**: MFA para todos os usuários + treinamento obrigatório. O CFO apresentará o impacto financeiro na próxima reunião. Decisão tomada por este conselho executivo.",
+            "Após ouvir todos os conselheiros, minha decisão é: **Adotar bloqueios automáticos para IPs suspeitos como medida imediata** — começando hoje. Paralelamente, iniciamos a implementação de MFA para todos os usuários administrativos em até 30 dias, liderada pelo BT. A PL cuidará da transição operacional sem impacto ao negócio. O DR estabelecerá a política de segurança e métricas de auditoria. E a HV comunicará a estratégia aos stakeholders. Que fique registrado: a segurança do nosso ecossistema digital é prioridade estratégica deste conselho.",
+            "Decisão final: **Implementar MFA para todos os acessos externos e administrativos em até 45 dias**, com bloqueios automáticos para IPs de países de alto risco. O BT lidera a execução técnica, a PL garante a continuidade operacional, o DR define as políticas de conformidade, e a HV coordena a comunicação. Decisão unânime do conselho.",
+            "Consolidando as contribuições: **Fase 1 (imediata)**: bloqueios automáticos para IPs suspeitos + revisão dos alertas críticos (liderado pelo BT). **Fase 2 (30 dias)**: MFA para acessos administrativos (PL e BT). **Fase 3 (60 dias)**: política de segurança formal, auditoria contínua e treinamento obrigatório (DR). A HV apresentará o impacto estratégico na próxima reunião. Decisão tomada por este conselho executivo.",
         ];
         $decisao = $decisoes[array_rand($decisoes)];
         $falas[] = [
-            'sigla' => 'CEO',
+            'sigla' => 'RM',
             'rodada' => 3,
             'fala' => $decisao,
             'created_at' => date('Y-m-d H:i:s', $t),
