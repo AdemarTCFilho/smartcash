@@ -154,6 +154,21 @@ class BaixasFinanceiras_model extends CI_Model
         return $this->db->get()->result();
     }
 
+    public function get($table, $select = '*', $where = null, $limit = 1, $offset = 0, $single = true)
+    {
+        $this->db->select($select);
+        $this->db->from($table);
+        if ($where) $this->db->where($where);
+        if ($limit) $this->db->limit($limit, $offset);
+        return $single ? $this->db->get()->row() : $this->db->get()->result();
+    }
+
+    public function edit($table, $data, $field, $value)
+    {
+        $this->db->where($field, $value);
+        return $this->db->update($table, $data);
+    }
+
     public function getUnidadesPorEmpresa($idEmpresa)
     {
         $this->db->select('*');
