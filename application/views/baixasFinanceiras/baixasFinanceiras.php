@@ -126,7 +126,7 @@
                 <button type="button" class="close" data-dismiss="modal" style="color:#fff;opacity:.8;">&times;</button>
                 <h4 class="modal-title" id="baixarModalTitle" style="color:#fff;">Baixar T&iacute;tulo</h4>
             </div>
-            <div class="modal-body" style="padding:20px;">
+            <div class="modal-body" style="padding:45px;">
                 <input type="hidden" id="baixarId" />
                 <input type="hidden" id="baixarTipo" />
                 <div class="row">
@@ -141,7 +141,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer" style="border-top:1px solid var(--border);padding:15px 20px;">
+            <div class="modal-footer" style="border-top:1px solid var(--border) !important;padding:15px 20px;">
                 <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
                 <button type="button" id="confirmarBaixa" class="btn" style="background:#5358ee;color:#fff;">Confirmar Baixa</button>
             </div>
