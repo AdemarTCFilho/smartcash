@@ -63,7 +63,7 @@
     gap: 20px;
     margin-bottom: 20px;
     font-size: 12px;
-    color: var(--muted);
+    color: #ffffff !important;
 }
 .status-item {
     display: flex;
@@ -119,7 +119,7 @@
 .card .label {
     font-size: 11px;
     letter-spacing: 1.5px;
-    color: #fff;
+    color: #ffffff;
     text-transform: uppercase;
     background: #0b1030 !important;
 }
@@ -136,7 +136,7 @@
     color: var(--muted);
     font-size: 12px;
     margin-top: 2px;
-    color: #fff !important;
+    color: #ffffff !important;
 }
 
 /* Panels */
@@ -191,7 +191,7 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
-    color: #fff;
+    color: #ffffff;
 }
 .table-mini th {
     text-align: left;
@@ -217,15 +217,15 @@
 .tablewrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
 table {
-    color: #fff !important; 
+    color: #ffffff !important; 
 }
 
 .status-label {
-   color: #fff !important; 
+   color: #ffffff !important; 
 }
 
 #auto-label {
-   color: #fff !important; 
+   color: #ffffff !important; 
 }
 
 .badge-falha {
