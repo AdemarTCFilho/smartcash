@@ -221,7 +221,11 @@ table {
 }
 
 .status-label {
-   color: #fff; 
+   color: #fff !important; 
+}
+
+#auto-label {
+   color: #fff !important; 
 }
 
 .badge-falha {
