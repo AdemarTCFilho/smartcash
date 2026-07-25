@@ -217,7 +217,7 @@
 .tablewrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
 table {
-    color: #fff;
+    color: #fff !important; 
 }
 
 .status-label {
