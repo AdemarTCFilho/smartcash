@@ -932,41 +932,41 @@ summary {
                                     <tr>
                                         <td>
                                         <label>
-                                            <input <?php if (isset($permissoes['vDreGerencial'])) {
-                                                if ($permissoes['vDreGerencial'] == '1') {
+                                            <input <?php if (isset($permissoes['vBoardExecutivo'])) {
+                                                if ($permissoes['vBoardExecutivo'] == '1') {
                                                     echo 'checked';
                                                 }
-                                            }?> name="vDreGerencial" class="marcar" type="checkbox" value="1" />
+                                            }?> name="vBoardExecutivo" class="marcar" type="checkbox" value="1" />
                                                 <span class="lbl" style="color: var(--title);"> Visualizar Board Executivo</span>
                                             </label>
                                         </td>
                                         <td>
                                             <label>
-                                                <input <?php if (isset($permissoes['aDreGerencial'])) {
-                                                    if ($permissoes['aDreGerencial'] == '1') {
+                                                <input <?php if (isset($permissoes['aBoardExecutivo'])) {
+                                                    if ($permissoes['aBoardExecutivo'] == '1') {
                                                         echo 'checked';
                                                     }
-                                                }?> name="aDreGerencial" class="marcar" type="checkbox" value="1" />
+                                                }?> name="aBoardExecutivo" class="marcar" type="checkbox" value="1" />
                                                 <span class="lbl" style="color: var(--title);"> Adicionar Board Executivo</span>
                                             </label>
                                         </td>
                                         <td>
                                             <label>
-                                                <input <?php if (isset($permissoes['eDreGerencial'])) {
-                                                    if ($permissoes['eDreGerencial'] == '1') {
+                                                <input <?php if (isset($permissoes['eBoardExecutivo'])) {
+                                                    if ($permissoes['eBoardExecutivo'] == '1') {
                                                         echo 'checked';
                                                     }
-                                                }?> name="eDreGerencial" class="marcar" type="checkbox" value="1" />
+                                                }?> name="eBoardExecutivo" class="marcar" type="checkbox" value="1" />
                                                 <span class="lbl" style="color: var(--title);"> Editar Board Executivo</span>
                                             </label>
                                         </td>
                                         <td>
                                             <label>
-                                                <input <?php if (isset($permissoes['dDreGerencial'])) {
-                                                    if ($permissoes['dDreGerencial'] == '1') {
+                                                <input <?php if (isset($permissoes['dBoardExecutivo'])) {
+                                                    if ($permissoes['dBoardExecutivo'] == '1') {
                                                         echo 'checked';
                                                     }
-                                                }?> name="dDreGerencial" class="marcar" type="checkbox" value="1" />
+                                                }?> name="dBoardExecutivo" class="marcar" type="checkbox" value="1" />
                                                 <span class="lbl" style="color: var(--title);"> Excluir Board Executivo</span>
                                             </label>
                                         </td>
