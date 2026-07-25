@@ -84,15 +84,17 @@ class Login extends CI_Controller
                 }
             }
 
+            $this->load->model('VigiaIa_model');
+            $ip = $this->input->ip_address();
+
             if ($user) {
-                // Verificar se acesso está expirado
                 if ($this->chk_date($user->dataExpiracao)) {
+                    $this->VigiaIa_model->registrarLogin(null, $email, $ip, 'Desconhecido', 'falha', 'Conta expirada');
                     $json = ['result' => false, 'message' => 'A conta do usuário está expirada, por favor entre em contato com o administrador do sistema.'];
                     echo json_encode($json);
                     die();
                 }
 
-                // Verificar credenciais do usuário
                 if (password_verify($password, $user->senha)) {
                     $session_data = [
                         'nome' => $user->nome,
@@ -105,13 +107,16 @@ class Login extends CI_Controller
                     ];
                     $this->session->set_userdata($session_data);
                     log_info('Efetuou login no sistema');
+                    $this->VigiaIa_model->registrarLogin($user->nome, $user->email, $ip, 'Desconhecido', 'sucesso');
                     $json = ['result' => true];
                     echo json_encode($json);
                 } else {
+                    $this->VigiaIa_model->registrarLogin($user->nome, $email, $ip, 'Desconhecido', 'falha', 'Senha incorreta');
                     $json = ['result' => false, 'message' => 'Os dados de acesso estão incorretos.'];
                     echo json_encode($json);
                 }
             } else {
+                $this->VigiaIa_model->registrarLogin(null, $email, $ip, 'Desconhecido', 'falha', 'Usuário não encontrado');
                 $json = ['result' => false, 'message' => 'Usuário não encontrado, verifique se suas credenciais estão corretass.'];
                 echo json_encode($json);
             }
