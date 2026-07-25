@@ -122,7 +122,7 @@
 <div class="modal fade" id="baixarModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="background:#0b1030;border:1px solid var(--border);">
-            <div class="modal-header" style="border-bottom:1px solid var(--border);padding:15px 20px;">
+            <div class="modal-header" style="border-bottom:1px solid var(--border);padding:15px 45px;">
                 <button type="button" class="close" data-dismiss="modal" style="color:#fff;opacity:.8;">&times;</button>
                 <h4 class="modal-title" id="baixarModalTitle" style="color:#fff;">Baixar T&iacute;tulo</h4>
             </div>
