@@ -141,7 +141,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer" style="border-top:1px solid var(--border) !important;padding:15px 20px;">
+            <div class="modal-footer" style="border-top:1px solid var(--border);padding:15px 20px;background:#background: #0b1030;">
                 <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
                 <button type="button" id="confirmarBaixa" class="btn" style="background:#5358ee;color:#fff;">Confirmar Baixa</button>
             </div>
