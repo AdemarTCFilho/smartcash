@@ -40,21 +40,11 @@ function carregarDadosIniciais() {
     success: function (r) {
       executivos = r.executivos || {};
       metricas = r.metricas || {};
-      renderMetricas(metricas);
       renderCards();
       renderHistorico(r.historico || []);
       $('#totalExecutivos').text(Object.keys(executivos).length);
     }
   });
-}
-
-function renderMetricas(m) {
-  var html = '';
-  html += '<div class="m-chip"><i class="fa fa-shield"></i> <strong>' + (m.tentativas_bloqueadas || 0) + '</strong> Tentativas Bloqueadas</div>';
-  html += '<div class="m-chip"><i class="fa fa-exclamation-triangle"></i> <strong>' + (m.acessos_suspeitos || 0) + '</strong> Acessos Suspeitos</div>';
-  html += '<div class="m-chip"><i class="fa fa-globe"></i> <strong>' + (m.paises_que_acessaram || 0) + '</strong> Países</div>';
-  html += '<div class="m-chip"><i class="fa fa-bell"></i> <strong>' + (m.totalAlertas || 0) + '</strong> Alertas</div>';
-  $('#indicadoresVivos').html(html);
 }
 
 function iniciarBoard() {

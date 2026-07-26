@@ -48,7 +48,7 @@
 
 /* Sections */
 .section {
-  background: var(--panel);
+  background: #0d0c2b;
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
@@ -67,7 +67,7 @@
 /* Pauta */
 .pauta-section textarea {
   width: 100%;
-  background: #0a0f2e;
+  background: #040414;
   border: 1px solid var(--border);
   border-radius: 8px;
   color: #fff;
@@ -171,13 +171,11 @@
 }
 
 .exec-card {
-  background: var(--panel);
+  background: #0d0c2b;
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px;
   text-align: center;
-  transition: all .3s;
-  opacity: .6;
 }
 .exec-card.ativo {
   opacity: 1;

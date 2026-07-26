@@ -16,13 +16,13 @@
 
   <div class="section pauta-section">
     <div class="section-label"><i class="fa fa-gavel"></i> Pauta do Board</div>
-    <textarea id="inputPauta" rows="2" placeholder="Ex: Devemos expandir Vitalab para mais uma cidade ou consolidar as unidades atuais?">Devemos expandir Vitalab para mais uma cidade ou consolidar as unidades atuais?</textarea>
+    <textarea id="inputPauta" rows="2" placeholder="Ex: Devemos expandir Vitalab para mais uma cidade ou consolidar as unidades atuais?"></textarea>
     <div class="pauta-row">
       <button id="btnConvocar" class="btn-convocar"><i class="fa fa-bullhorn"></i> Convocar Board</button>
       <button id="btnExportarCSV" class="btn-csv" style="display:none"><i class="fa fa-download"></i> Exportar CSV</button>
     </div>
     <div id="indicadoresVivos" class="metricas-bar"></div>
-  </div>
+  </div><br>
 
   <div class="board-bar" id="painelBoardBar" style="display:none">
     <div class="board-bar-left">
