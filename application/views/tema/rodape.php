@@ -52,5 +52,17 @@
             } );
         }
     } );
+
+    // Loading overlay on menu/page navigation
+    $(document).ready(function() {
+        $('#loading-overlay').removeClass('active');
+        $(document).on('click', 'a[href]:not([href^="#"]):not([href^="javascript"]):not(.dropdown-toggle):not(.submenu a)', function(e) {
+            var href = $(this).attr('href');
+            if (href && href.indexOf('#') === -1 && href.indexOf('javascript:') === -1 && !$(this).hasClass('dropdown-toggle')) {
+                $('#loading-overlay').addClass('active');
+            }
+        });
+        $(window).on('load', function() { $('#loading-overlay').removeClass('active'); });
+    });
 </script>
 </html>
