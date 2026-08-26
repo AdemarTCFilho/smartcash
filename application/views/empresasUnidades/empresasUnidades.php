@@ -9,7 +9,7 @@
         <div class="linha-btn">
             <button class="btn active" onclick="openTab('tab-empresa')">Empresa</button>
             <button class="btn" onclick="openTab('tab-unidade')">Unidades</button>
-            <button class="btn" onclick="openTab('tab-subunidade')">SubUnidades</button>
+            <button class="btn" onclick="openTab('tab-subunidade')">Departamentos</button>
         </div>
     </div>
 
@@ -63,7 +63,7 @@
                         <label>Nome da Unidade</label>
                         <input class="swal-input" type="text" name="nomeUnidade" placeholder="Digite o nome" style="width: 50%;">
                         <label>Empresa</label>
-                        <select class="btn-select" id="selectEmpresaUnidade" name="idEmpresa" style="height: 38px; text-align:left;">
+                        <select class="btn-select" id="selectEmpresaUnidade" name="idEmpresa" style="height: 38px; text-align:left; width:50%;">
                             <option value="">Selecione uma empresa</option>
                         </select>
                         <label>Endereço</label>
@@ -106,7 +106,7 @@
                         <label>Nome da SubUnidade</label>
                         <input class="swal-input" type="text" name="nomeSubUnidade" placeholder="Digite o nome" style="width: 50%;">
                         <label>Empresa</label>
-                        <select class="btn-select" id="selectEmpresaSub" name="idEmpresa" style="height: 38px; text-align:left;" onchange="carregarUnidadesPorEmpresa(this.value)">
+                        <select class="btn-select" id="selectEmpresaSub" name="idEmpresa" style="height: 38px; text-align:left; background: #101641 !important;">
                             <option value="">Selecione uma empresa</option>
                         </select>
                         <label>Unidade</label>
@@ -128,7 +128,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>SUBUNIDADE</th>
+                        <th>DEPARTAMENTO</th>
                         <th>UNIDADE</th>
                         <th>EMPRESA</th>
                         <th>CNPJ</th>

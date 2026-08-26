@@ -114,13 +114,13 @@ function carregarSubUnidades(unidadeId, selectId) {
     let select = document.getElementById(selectId);
     select.innerHTML = '<option value="">Carregando...</option>';
     if (!unidadeId) {
-        select.innerHTML = '<option value="">Selecione uma subunidade</option>';
+        select.innerHTML = '<option value="">Selecione um departamento</option>';
         return Promise.resolve();
     }
     return fetch(siteUrl + 'contasReceber/listarSubUnidadesPorUnidade?idUnidade=' + unidadeId)
         .then(res => res.json())
         .then(res => {
-            let opts = '<option value="">Selecione uma subunidade</option>';
+            let opts = '<option value="">Selecione um departamento</option>';
             res.data.forEach(s => {
                 opts += '<option value="' + s.idSubUnidade + '">' + s.nomeSubUnidade + '</option>';
             });
@@ -250,9 +250,9 @@ function abrirModal(id) {
                             </select>
                         </div>
                         <div>
-                            <label class="swal-label">SubUnidade</label>
+                            <label class="swal-label">Departamento</label>
                             <select id="swal-subunidade" class="swal-select select2-modal">
-                                <option value="">Selecione uma subunidade</option>
+                                <option value="">Selecione um departamento</option>
                             </select>
                         </div>
                         <div>
@@ -353,7 +353,7 @@ function abrirModal(id) {
 
 let carregarUnidadesModal = function (empresaId) {
     return carregarUnidades(empresaId, 'swal-unidade').then(() => {
-        document.getElementById('swal-subunidade').innerHTML = '<option value="">Selecione uma subunidade</option>';
+        document.getElementById('swal-subunidade').innerHTML = '<option value="">Selecione um departamento</option>';
     });
 };
 

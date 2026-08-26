@@ -30,3 +30,4 @@ application/logs/*
 ci_sessions/
 
 uploads
+.opencode

@@ -50,7 +50,7 @@ body {
 
 .btn-export {
     background: #11183d; color: #8e98c6; border: 1px solid var(--border);
-    padding: 10px 16px; border-radius: 6px; cursor: pointer; font-size: 13px;
+    padding: 10px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; margin-top: -3%;
 }
 
 .btn-export:hover { background: #1c1941; }

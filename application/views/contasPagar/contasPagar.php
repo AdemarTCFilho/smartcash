@@ -64,7 +64,7 @@
                         <th>USUÁRIO</th>
                         <th>EMPRESA</th>
                         <th>UNIDADE</th>
-                        <th>SUBUNIDADE</th>
+                        <th>DEPARTAMENTO</th>
                         <th>VALOR</th>
                         <th>VENCIMENTO</th>
                         <th>CATEGORIA</th>

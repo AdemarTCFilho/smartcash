@@ -166,7 +166,7 @@ function abrirModal(id) {
                 '<div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:15px;">',
                 '<div><label class="swal-label">Empresa:</label><select id="swal-empresa" class="swal-select select2-modal" onchange="carregarUnidades(this.value)">' + empOpts + '</select></div>',
                 '<div><label class="swal-label">Unidade:</label><select id="swal-unidade" class="swal-select select2-modal" onchange="carregarSubUnidades(this.value)"><option value="">Selecione</option></select></div>',
-                '<div><label class="swal-label">SubUnidade:</label><select id="swal-subunidade" class="swal-select select2-modal"><option value="">Sem subunidade</option></select></div>',
+                '<div><label class="swal-label">Departamento:</label><select id="swal-subunidade" class="swal-select select2-modal"><option value="">Sem departamento</option></select></div>',
                 '<div><label class="swal-label">Mês referência:</label><select id="swal-mes" class="swal-select"><option value="">Selecione</option>' + gerarMesesOptions() + '</select></div>',
                 '<div><label class="swal-label">Meta Receita (R$):</label><input id="swal-receita" type="text" class="swal-input" placeholder="0,00" oninput="mascaraMonetaria(this)"></div>',
                 '<div><label class="swal-label">Meta Despesa (R$):</label><input id="swal-despesa" type="text" class="swal-input" placeholder="0,00" oninput="mascaraMonetaria(this)"></div>',

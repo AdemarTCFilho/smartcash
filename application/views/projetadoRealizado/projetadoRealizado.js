@@ -230,9 +230,9 @@ function abrirModal(id) {
                                 </select>
                             </div>
                             <div>
-                                <label class="swal-label">SubUnidade:</label>
+                                <label class="swal-label">Departamento:</label>
                                 <select id="swal-subunidade" class="swal-select select2-modal">
-                                    <option value="">Sem subunidade</option>
+                                    <option value="">Sem departamento</option>
                                 </select>
                             </div>
                             <div>
