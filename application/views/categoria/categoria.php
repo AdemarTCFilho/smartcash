@@ -2,13 +2,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <div class="container">
-    <div class="title">Categorias / SubCategorias</div>
+    <div class="title">Categorias / Classificação no Plano de Contas</div>
     <div class="sub">Cadastro e gerenciamento de categorias e subcategorias</div>
 
     <div class="panel">
         <div class="linha-btn">
             <button class="btn active" onclick="openTab('tab-categoria')">Categorias</button>
-            <button class="btn" onclick="openTab('tab-subcategoria')">SubCategorias</button>
+            <button class="btn" onclick="openTab('tab-subcategoria')">Classificação no Plano de Contas</button>
         </div>
     </div>
 
