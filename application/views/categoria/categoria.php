@@ -52,7 +52,7 @@
 
     <div id="tab-subcategoria" class="tab-content">
         <div class="card panel table-panel bottom">
-            <div class="texto-card">CADASTRO DE SUBCATEGORIA</div><hr/>
+            <div class="texto-card">CADASTRO DE CLASSIFICAÇÃO NO PLANO DE CONTAS</div><hr/>
             <form id="formSubCategoria">
                 <input type="hidden" name="id" value="">
                 <div class="texto-card">
@@ -61,7 +61,7 @@
                         <select class="swal-input" id="selectCategoriaSub" name="idCategoria" style="height: 38px; text-align:left; width: 50%;">
                             <option value="">Selecione uma categoria</option>
                         </select>
-                        <label>Nome da SubCategoria</label>
+                        <label>Nome da Classificação</label>
                         <input class="swal-input" type="text" name="nomeSubCategoria" placeholder="Digite o nome" style="width: 50%;" maxlength="100">
                         <label>Status</label>
                         <select class="swal-input" name="status" style="height: 38px; text-align:left; width: 50%;">
@@ -69,7 +69,7 @@
                             <option value="0">Inativo</option>
                         </select>
                     </div><br/>
-                    <button type="button" class="baixar-btn" onclick="salvarSubCategoria()">Salvar SubCategoria</button>
+                    <button type="button" class="baixar-btn" onclick="salvarSubCategoria()">Salvar Classificação</button>
                 </div>
             </form>
         </div>
