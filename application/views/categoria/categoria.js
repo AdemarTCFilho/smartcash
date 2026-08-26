@@ -1,3 +1,17 @@
+function openTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.target.classList.add('active');
+}
+
+function statusBadge(status) {
+    if (status == 1) {
+        return '<span class="status-ativo">Ativo</span>';
+    }
+    return '<span class="status-inativo">Inativo</span>';
+}
+
 function carregarCategorias() {
     let tabelaEl = document.querySelector('#tabelaCategorias').closest('table');
 
@@ -10,9 +24,7 @@ function carregarCategorias() {
         .then(res => {
             let html = '';
             res.data.forEach(c => {
-                let statusHtml = c.status == 1
-                    ? '<span class="status-ativo">Ativo</span>'
-                    : '<span class="status-inativo">Inativo</span>';
+                let statusHtml = statusBadge(c.status);
                 html += '<tr>' +
                     '<td>' + c.idCategoria + '</td>' +
                     '<td>' + c.nomeCategoria + '</td>' +
@@ -34,6 +46,33 @@ function carregarCategorias() {
                     "url": baseUrl + "assets/js/dataTable_pt-br.json"
                 }
             });
+
+            let opts = '<option value="">Selecione uma categoria</option>';
+            res.data.forEach(c => {
+                opts += '<option value="' + c.idCategoria + '">' + c.nomeCategoria + '</option>';
+            });
+            document.getElementById('selectCategoriaSub').innerHTML = opts;
+        });
+}
+
+function carregarSubCategorias() {
+    fetch(siteUrl + 'categoria/listarSubCategorias')
+        .then(res => res.json())
+        .then(res => {
+            let html = '';
+            res.data.forEach(s => {
+                let statusHtml = statusBadge(s.status);
+                html += '<tr>' +
+                    '<td>' + s.nomeSubCategoria + '</td>' +
+                    '<td>' + s.nomeCategoria + '</td>' +
+                    '<td>' + statusHtml + '</td>' +
+                    '<td>' +
+                        "<span class='edit' onclick='editarSubCategoria(" + s.idSubCategoria + ")' title='Editar SubCategoria'>✎</span>" +
+                        "<span class='edit' onclick='excluirSubCategoria(" + s.idSubCategoria + ")' title='Excluir SubCategoria'><i class='fa fa-trash-o' aria-hidden='true'></i></span>" +
+                    '</td>' +
+                '</tr>';
+            });
+            document.getElementById('tabelaSubCategorias').innerHTML = html;
         });
 }
 
@@ -48,6 +87,22 @@ function salvarCategoria() {
                 form.reset();
                 document.querySelector('#formCategoria .baixar-btn').textContent = 'Adicionar Categoria';
                 carregarCategorias();
+            } else {
+                Swal.fire('Erro', res.message, 'error');
+            }
+        });
+}
+
+function salvarSubCategoria() {
+    let form = document.getElementById('formSubCategoria');
+    let data = new URLSearchParams(new FormData(form));
+    fetch(siteUrl + 'categoria/salvarSubCategoria', { method: 'POST', body: data })
+        .then(res => res.json())
+        .then(res => {
+            if (res.success) {
+                Swal.fire('Sucesso', res.message, 'success');
+                form.reset();
+                carregarSubCategorias();
             } else {
                 Swal.fire('Erro', res.message, 'error');
             }
@@ -71,6 +126,29 @@ function excluirCategoria(id) {
                 .then(res => {
                     Swal.fire('Excluído', res.message, 'success');
                     carregarCategorias();
+                    carregarSubCategorias();
+                });
+        }
+    });
+}
+
+function excluirSubCategoria(id) {
+    Swal.fire({
+        title: 'Confirmar exclusão',
+        text: 'Tem certeza que deseja excluir esta subcategoria?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sim, excluir',
+        cancelButtonText: 'Cancelar'
+    }).then(result => {
+        if (result.isConfirmed) {
+            let data = new URLSearchParams();
+            data.append('id', id);
+            fetch(siteUrl + 'categoria/excluirSubCategoria', { method: 'POST', body: data })
+                .then(res => res.json())
+                .then(res => {
+                    Swal.fire('Excluído', res.message, 'success');
+                    carregarSubCategorias();
                 });
         }
     });
@@ -89,6 +167,20 @@ function editarCategoria(id) {
         });
 }
 
+function editarSubCategoria(id) {
+    fetch(siteUrl + 'categoria/getDadosSubCategoria?id=' + id)
+        .then(res => res.json())
+        .then(data => {
+            let form = document.getElementById('formSubCategoria');
+            form.querySelector('[name="id"]').value = data.idSubCategoria;
+            form.querySelector('[name="idCategoria"]').value = data.idCategoria;
+            form.querySelector('[name="nomeSubCategoria"]').value = data.nomeSubCategoria;
+            form.querySelector('[name="status"]').value = data.status;
+            openTab('tab-subcategoria');
+        });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     carregarCategorias();
+    carregarSubCategorias();
 });

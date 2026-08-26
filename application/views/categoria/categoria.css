@@ -47,6 +47,28 @@ body {
     padding: 5px;
 }
 
+.linha-btn {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    background: #11183D;
+    color: #8E98C6;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.btn:hover { background: #121f5e; color: #fff; }
+.btn.active { background: var(--purple); color: #fff; border: 1px solid var(--purple); }
+
+.tab-content { display: none; margin-top: -14px; }
+.tab-content.active { display: block; }
+
 .texto-card {
     color: var(--text);
     padding: 1%;

@@ -78,4 +78,35 @@ class Categoria_model extends CI_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function getAllSubCategorias()
+    {
+        $this->db->select('subcategoria.*, categoria.nomeCategoria');
+        $this->db->from('subcategoria');
+        $this->db->join('categoria', 'categoria.idCategoria = subcategoria.idCategoria', 'left');
+        $this->db->order_by('subcategoria.nomeSubCategoria', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getSubCategoriaById($id)
+    {
+        $this->db->select('subcategoria.*, categoria.nomeCategoria');
+        $this->db->from('subcategoria');
+        $this->db->join('categoria', 'categoria.idCategoria = subcategoria.idCategoria', 'left');
+        $this->db->where('idSubCategoria', $id);
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getCategoriasAtivas()
+    {
+        $this->db->select('*');
+        $this->db->from('categoria');
+        $this->db->where('status', 1);
+        $this->db->order_by('nomeCategoria', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

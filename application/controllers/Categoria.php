@@ -93,4 +93,63 @@ class Categoria extends MY_Controller
         $categoria = $this->Categoria_model->getCategoriaById($id);
         echo json_encode($categoria);
     }
+
+    public function salvarSubCategoria()
+    {
+        $id = $this->input->post('id');
+        $idCategoria = $this->input->post('idCategoria');
+        $nomeSubCategoria = $this->input->post('nomeSubCategoria');
+
+        if (empty($idCategoria) || empty($nomeSubCategoria)) {
+            echo json_encode(['success' => false, 'message' => 'Categoria e nome são obrigatórios.']);
+            return;
+        }
+
+        if (strlen($nomeSubCategoria) > 100) {
+            echo json_encode(['success' => false, 'message' => 'Nome deve ter no máximo 100 caracteres.']);
+            return;
+        }
+
+        $status = $this->input->post('status') ? 1 : 0;
+
+        $data = [
+            'idCategoria' => $idCategoria,
+            'nomeSubCategoria' => $nomeSubCategoria,
+            'status' => $status,
+        ];
+
+        if ($id) {
+            $this->Categoria_model->edit('subcategoria', $data, 'idSubCategoria', $id);
+            echo json_encode(['success' => true, 'message' => 'SubCategoria atualizada com sucesso!']);
+        } else {
+            $this->Categoria_model->add('subcategoria', $data);
+            echo json_encode(['success' => true, 'message' => 'SubCategoria cadastrada com sucesso!']);
+        }
+    }
+
+    public function listarSubCategorias()
+    {
+        $subcategorias = $this->Categoria_model->getAllSubCategorias();
+        echo json_encode(['data' => $subcategorias]);
+    }
+
+    public function excluirSubCategoria()
+    {
+        $id = $this->input->post('id');
+        $this->Categoria_model->delete('subcategoria', 'idSubCategoria', $id);
+        echo json_encode(['success' => true, 'message' => 'SubCategoria excluída com sucesso!']);
+    }
+
+    public function getDadosSubCategoria()
+    {
+        $id = $this->input->get('id');
+        $subcategoria = $this->Categoria_model->getSubCategoriaById($id);
+        echo json_encode($subcategoria);
+    }
+
+    public function listarCategoriasAtivas()
+    {
+        $categorias = $this->Categoria_model->getCategoriasAtivas();
+        echo json_encode(['data' => $categorias]);
+    }
 }
