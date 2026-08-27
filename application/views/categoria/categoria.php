@@ -3,7 +3,7 @@
 
 <div class="container">
     <div class="title">Categorias / Classificação no Plano de Contas</div>
-    <div class="sub">Cadastro e gerenciamento de categorias e subcategorias</div>
+    <div class="sub">Cadastro e gerenciamento de categorias e Classificação no Plano de Contas</div>
 
     <div class="panel">
         <div class="linha-btn">
@@ -19,21 +19,33 @@
                 <input type="hidden" name="id" value="">
                 <div class="texto-card">
                     <div class="section active card texto-card">
-                        <label>Nome da Categoria</label>
-                        <input class="swal-input" type="text" name="nomeCategoria" placeholder="Digite o nome da categoria" style="width: 50%;" maxlength="100">
-                        <label>Tipo</label>
-                        <select class="swal-input" name="tipo" style="height: 38px; text-align:left; width: 50%;">
-                            <option value="ENTRADA">Entrada</option>
-                            <option value="SAIDA">Saída</option>
-                        </select>
-                        <label>Descrição da Categoria</label>
-                        <textarea class="swal-input" name="descricaoCategoria" placeholder="Digite a descrição" style="width: 50%; height: 80px; resize: vertical;" maxlength="255"></textarea>
-                        <label>Status</label>
-                        <select class="swal-input" name="status" style="height: 38px; text-align:left; width: 50%;">
-                            <option value="1">Ativo</option>
-                            <option value="0">Inativo</option>
-                        </select>
-                    </div><br/>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nome da Categoria</label>
+                                <input class="swal-input" type="text" name="nomeCategoria" placeholder="Digite o nome da categoria" maxlength="100">
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo</label>
+                                <select class="swal-input" name="tipo">
+                                    <option value="ENTRADA">Entrada</option>
+                                    <option value="SAIDA">Saída</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select class="swal-input" name="status">
+                                    <option value="1">Ativo</option>
+                                    <option value="0">Inativo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="flex-basis: 100%;">
+                                <label>Descrição da Categoria</label>
+                                <textarea class="swal-input" name="descricaoCategoria" placeholder="Digite a descrição" style="height: 80px; resize: vertical;" maxlength="255"></textarea>
+                            </div>
+                        </div>
+                    </div>
                     <button type="button" class="baixar-btn" onclick="salvarCategoria()">Adicionar Categoria</button>
                 </div>
             </form>
@@ -63,18 +75,26 @@
                 <input type="hidden" name="id" value="">
                 <div class="texto-card">
                     <div class="section active card texto-card">
-                        <label>Categoria</label>
-                        <select class="swal-input" id="selectCategoriaSub" name="idCategoria" style="height: 38px; text-align:left; width: 50%;">
-                            <option value="">Selecione uma categoria</option>
-                        </select>
-                        <label>Nome da Classificação</label>
-                        <input class="swal-input" type="text" name="nomeSubCategoria" placeholder="Digite o nome" style="width: 50%;" maxlength="100">
-                        <label>Status</label>
-                        <select class="swal-input" name="status" style="height: 38px; text-align:left; width: 50%;">
-                            <option value="1">Ativo</option>
-                            <option value="0">Inativo</option>
-                        </select>
-                    </div><br/>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Categoria</label>
+                                <select class="swal-input" id="selectCategoriaSub" name="idCategoria">
+                                    <option value="">Selecione uma categoria</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Nome da Classificação</label>
+                                <input class="swal-input" type="text" name="nomeSubCategoria" placeholder="Digite o nome" maxlength="100">
+                            </div>
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select class="swal-input" name="status">
+                                    <option value="1">Ativo</option>
+                                    <option value="0">Inativo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <button type="button" class="baixar-btn" onclick="salvarSubCategoria()">Salvar Classificação</button>
                 </div>
             </form>
