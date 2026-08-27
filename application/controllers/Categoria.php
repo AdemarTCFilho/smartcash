@@ -40,6 +40,7 @@ class Categoria extends MY_Controller
     {
         $id = $this->input->post('id');
         $nomeCategoria = $this->input->post('nomeCategoria');
+        $tipo = $this->input->post('tipo');
         $descricaoCategoria = $this->input->post('descricaoCategoria');
 
         if (empty($nomeCategoria) || empty($descricaoCategoria)) {
@@ -57,10 +58,16 @@ class Categoria extends MY_Controller
             return;
         }
 
+        if (!in_array($tipo, ['ENTRADA', 'SAIDA'])) {
+            echo json_encode(['success' => false, 'message' => 'Tipo deve ser ENTRADA ou SAÍDA.']);
+            return;
+        }
+
         $status = $this->input->post('status') ? 1 : 0;
 
         $data = [
             'nomeCategoria' => $nomeCategoria,
+            'tipo' => $tipo,
             'descricaoCategoria' => $descricaoCategoria,
             'status' => $status,
         ];

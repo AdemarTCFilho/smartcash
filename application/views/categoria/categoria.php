@@ -21,6 +21,11 @@
                     <div class="section active card texto-card">
                         <label>Nome da Categoria</label>
                         <input class="swal-input" type="text" name="nomeCategoria" placeholder="Digite o nome da categoria" style="width: 50%;" maxlength="100">
+                        <label>Tipo</label>
+                        <select class="swal-input" name="tipo" style="height: 38px; text-align:left; width: 50%;">
+                            <option value="ENTRADA">Entrada</option>
+                            <option value="SAIDA">Saída</option>
+                        </select>
                         <label>Descrição da Categoria</label>
                         <textarea class="swal-input" name="descricaoCategoria" placeholder="Digite a descrição" style="width: 50%; height: 80px; resize: vertical;" maxlength="255"></textarea>
                         <label>Status</label>
@@ -40,6 +45,7 @@
                     <tr>
                         <th>ID</th>
                         <th>NOME</th>
+                        <th>TIPO</th>
                         <th>DESCRIÇÃO</th>
                         <th>STATUS</th>
                         <th>AÇÃO</th>

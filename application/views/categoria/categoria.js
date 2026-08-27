@@ -12,6 +12,13 @@ function statusBadge(status) {
     return '<span class="status-inativo">Inativo</span>';
 }
 
+function tipoBadge(tipo) {
+    if (tipo == 'SAIDA') {
+        return '<span class="status-inativo">Saída</span>';
+    }
+    return '<span class="status-ativo">Entrada</span>';
+}
+
 function carregarCategorias() {
     let tabelaEl = document.querySelector('#tabelaCategorias').closest('table');
 
@@ -28,6 +35,7 @@ function carregarCategorias() {
                 html += '<tr>' +
                     '<td>' + c.idCategoria + '</td>' +
                     '<td>' + c.nomeCategoria + '</td>' +
+                    '<td>' + tipoBadge(c.tipo) + '</td>' +
                     '<td>' + (c.descricaoCategoria || '') + '</td>' +
                     '<td>' + statusHtml + '</td>' +
                     '<td>' +
@@ -161,6 +169,7 @@ function editarCategoria(id) {
             let form = document.getElementById('formCategoria');
             form.querySelector('[name="id"]').value = data.idCategoria;
             form.querySelector('[name="nomeCategoria"]').value = data.nomeCategoria;
+            form.querySelector('[name="tipo"]').value = data.tipo;
             form.querySelector('[name="descricaoCategoria"]').value = data.descricaoCategoria || '';
             form.querySelector('[name="status"]').value = data.status;
             document.querySelector('#formCategoria .baixar-btn').textContent = 'Salvar';
