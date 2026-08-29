@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?= base_url('application/views/contasReceber/contasReceber.css') ?>">
+<link rel="stylesheet" href="<?= base_url('application/views/contasReceber/contasReceber.css') ?>?v=<?= filemtime(APPPATH . 'views/contasReceber/contasReceber.css') ?>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <div class="container">
@@ -8,10 +8,42 @@
             <div class="title">Contas a Receber</div>
             <div class="sub">Lançamentos de receitas</div>
         </div>
-        <div class="filters">
-            <select class="btn" id="filtroMes" style="height: 43px;"></select>
-            <select class="btn" id="filtroEmpresa" style="height: 43px;">
+    </div>
+
+    <div class="card panel filtro-bar">
+        <div class="filtro-linha">
+            <div class="filtro-busca">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                <input type="text" id="filtroBusca" placeholder="Buscar por cliente..." onkeydown="if(event.key==='Enter') pesquisarContasReceber();">
+            </div>
+            <div class="filtro-periodo">
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+                <input type="date" id="filtroDataDe">
+                <span>a</span>
+                <input type="date" id="filtroDataAte">
+            </div>
+            <button type="button" class="btn-atalho" onclick="aplicarAtalhoPeriodo('mes')">Mês</button>
+            <button type="button" class="btn-atalho" onclick="aplicarAtalhoPeriodo('hoje')">Hoje</button>
+            <button type="button" class="btn-filtro-avancado" id="btnFiltroAvancado" onclick="toggleFiltroAvancado()">
+                <i class="fa fa-filter" aria-hidden="true"></i>&nbsp; Filtro avançado
+            </button>
+            <button type="button" class="btn-pesquisar" onclick="pesquisarContasReceber()">Pesquisar</button>
+        </div>
+        <div class="filtro-avancado" id="filtroAvancado" style="display:none;">
+            <select class="filtro-select select2-filtro" id="filtroEmpresa">
                 <option value="">Todas as empresas</option>
+            </select>
+            <select class="filtro-select select2-filtro" id="filtroCategoria">
+                <option value="">Todas as categorias</option>
+            </select>
+            <select class="filtro-select select2-filtro" id="filtroUnidade">
+                <option value="">Todas as unidades</option>
+            </select>
+            <select class="filtro-select select2-filtro" id="filtroSubUnidade">
+                <option value="">Todos os departamentos</option>
+            </select>
+            <select class="filtro-select select2-filtro" id="filtroUsuario">
+                <option value="">Todos os usuários</option>
             </select>
         </div>
     </div>
@@ -46,7 +78,7 @@
     <div class="cards-duplo">
         <div class="card receitas">
             <div class="texto-card">Receitas por categoria</div>
-            <div  id="receitasCategoriaContent"></div>
+            <div id="receitasCategoriaContent"></div>
         </div>
         <div class="card vencimentos">
             <div class="texto-card">Próximos vencimentos</div>
@@ -86,4 +118,4 @@
 <script>
     var siteUrl = '<?= site_url() ?>';
 </script>
-<script src="<?= base_url('application/views/contasReceber/contasReceber.js') ?>"></script>
+<script src="<?= base_url('application/views/contasReceber/contasReceber.js') ?>?v=<?= filemtime(APPPATH . 'views/contasReceber/contasReceber.js') ?>"></script>

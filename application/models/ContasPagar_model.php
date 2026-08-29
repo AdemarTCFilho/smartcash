@@ -44,6 +44,30 @@ class ContasPagar_model extends CI_Model
         return $this->db->count_all($table);
     }
 
+    public function getUltimasRecorrenciasIndeterminadasAtivas()
+    {
+        $sql = "
+            SELECT cp.*
+            FROM contas_pagar cp
+            INNER JOIN (
+                SELECT grupoLancamento, MAX(recorrenteIndex) AS maxIndex
+                FROM contas_pagar
+                WHERE tipoRepeticao = 'indeterminado' AND recorrenteCancelado = 0
+                GROUP BY grupoLancamento
+            ) ultimas ON ultimas.grupoLancamento = cp.grupoLancamento AND ultimas.maxIndex = cp.recorrenteIndex
+            WHERE cp.tipoRepeticao = 'indeterminado' AND cp.recorrenteCancelado = 0
+        ";
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
+
+    public function cancelarGrupoRecorrente($grupoLancamento)
+    {
+        $this->db->where('grupoLancamento', $grupoLancamento);
+        $this->db->update('contas_pagar', ['recorrenteCancelado' => 1]);
+        return $this->db->affected_rows() >= 0;
+    }
+
     public function getAllContasPagar()
     {
         $this->db->select('
@@ -134,6 +158,26 @@ class ContasPagar_model extends CI_Model
         return $query->result();
     }
 
+    public function getAllUnidades()
+    {
+        $this->db->select('*');
+        $this->db->from('unidade');
+        $this->db->where('status', 1);
+        $this->db->order_by('nomeUnidade', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllSubUnidades()
+    {
+        $this->db->select('*');
+        $this->db->from('sub_unidade');
+        $this->db->where('status', 1);
+        $this->db->order_by('nomeSubUnidade', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getSubUnidadesPorUnidade($idUnidade)
     {
         $this->db->select('*');
@@ -150,6 +194,7 @@ class ContasPagar_model extends CI_Model
         $this->db->select('*');
         $this->db->from('categoria');
         $this->db->where('status', 1);
+        $this->db->where('tipo', 'SAIDA');
         $this->db->order_by('nomeCategoria', 'asc');
         $query = $this->db->get();
         return $query->result();
@@ -157,11 +202,13 @@ class ContasPagar_model extends CI_Model
 
     public function getSubCategoriasPorCategoria($idCategoria)
     {
-        $this->db->select('*');
+        $this->db->select('subcategoria.*');
         $this->db->from('subcategoria');
-        $this->db->where('idCategoria', $idCategoria);
-        $this->db->where('status', 1);
-        $this->db->order_by('nomeSubCategoria', 'asc');
+        $this->db->join('categoria', 'categoria.idCategoria = subcategoria.idCategoria', 'left');
+        $this->db->where('subcategoria.idCategoria', $idCategoria);
+        $this->db->where('subcategoria.status', 1);
+        $this->db->where('categoria.tipo', 'SAIDA');
+        $this->db->order_by('subcategoria.nomeSubCategoria', 'asc');
         $query = $this->db->get();
         return $query->result();
     }

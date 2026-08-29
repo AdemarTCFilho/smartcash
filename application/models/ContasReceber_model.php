@@ -1,7 +1,6 @@
 <?php
 class ContasReceber_model extends CI_Model
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -60,6 +59,30 @@ class ContasReceber_model extends CI_Model
         return $this->db->count_all($table);
     }
 
+    public function getUltimasRecorrenciasIndeterminadasAtivas()
+    {
+        $sql = "
+            SELECT cr.*
+            FROM contas_receber cr
+            INNER JOIN (
+                SELECT grupoLancamento, MAX(recorrenteIndex) AS maxIndex
+                FROM contas_receber
+                WHERE tipoRepeticao = 'indeterminado' AND recorrenteCancelado = 0
+                GROUP BY grupoLancamento
+            ) ultimas ON ultimas.grupoLancamento = cr.grupoLancamento AND ultimas.maxIndex = cr.recorrenteIndex
+            WHERE cr.tipoRepeticao = 'indeterminado' AND cr.recorrenteCancelado = 0
+        ";
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
+
+    public function cancelarGrupoRecorrente($grupoLancamento)
+    {
+        $this->db->where('grupoLancamento', $grupoLancamento);
+        $this->db->update('contas_receber', ['recorrenteCancelado' => 1]);
+        return $this->db->affected_rows() >= 0;
+    }
+
     public function getAllContasReceber()
     {
         $this->db->select('
@@ -69,7 +92,8 @@ class ContasReceber_model extends CI_Model
             empresa.nomeEmpresa,
             unidade.nomeUnidade,
             sub_unidade.nomeSubUnidade,
-            categoria.nomeCategoria
+            categoria.nomeCategoria,
+            subcategoria.nomeSubCategoria
         ');
         $this->db->from('contas_receber');
         $this->db->join('clientes', 'clientes.idClientes = contas_receber.idClientes', 'left');
@@ -78,6 +102,7 @@ class ContasReceber_model extends CI_Model
         $this->db->join('unidade', 'unidade.idUnidade = contas_receber.idUnidade', 'left');
         $this->db->join('sub_unidade', 'sub_unidade.idSubUnidade = contas_receber.idSubUnidade', 'left');
         $this->db->join('categoria', 'categoria.idCategoria = contas_receber.idCategoria', 'left');
+        $this->db->join('subcategoria', 'subcategoria.idSubCategoria = contas_receber.idSubCategoria', 'left');
         $this->db->order_by('contas_receber.dataCriacao', 'desc');
         $query = $this->db->get();
         return $query->result();
@@ -92,7 +117,8 @@ class ContasReceber_model extends CI_Model
             empresa.nomeEmpresa,
             unidade.nomeUnidade,
             sub_unidade.nomeSubUnidade,
-            categoria.nomeCategoria
+            categoria.nomeCategoria,
+            subcategoria.nomeSubCategoria
         ');
         $this->db->from('contas_receber');
         $this->db->join('clientes', 'clientes.idClientes = contas_receber.idClientes', 'left');
@@ -101,6 +127,7 @@ class ContasReceber_model extends CI_Model
         $this->db->join('unidade', 'unidade.idUnidade = contas_receber.idUnidade', 'left');
         $this->db->join('sub_unidade', 'sub_unidade.idSubUnidade = contas_receber.idSubUnidade', 'left');
         $this->db->join('categoria', 'categoria.idCategoria = contas_receber.idCategoria', 'left');
+        $this->db->join('subcategoria', 'subcategoria.idSubCategoria = contas_receber.idSubCategoria', 'left');
         $this->db->where('idContaReceber', $id);
         $this->db->limit(1);
         $query = $this->db->get();
@@ -146,6 +173,26 @@ class ContasReceber_model extends CI_Model
         return $query->result();
     }
 
+    public function getAllUnidades()
+    {
+        $this->db->select('*');
+        $this->db->from('unidade');
+        $this->db->where('status', 1);
+        $this->db->order_by('nomeUnidade', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllSubUnidades()
+    {
+        $this->db->select('*');
+        $this->db->from('sub_unidade');
+        $this->db->where('status', 1);
+        $this->db->order_by('nomeSubUnidade', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getSubUnidadesPorUnidade($idUnidade)
     {
         $this->db->select('*');
@@ -162,7 +209,21 @@ class ContasReceber_model extends CI_Model
         $this->db->select('*');
         $this->db->from('categoria');
         $this->db->where('status', 1);
+        $this->db->where('tipo', 'ENTRADA');
         $this->db->order_by('nomeCategoria', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getSubCategoriasPorCategoria($idCategoria)
+    {
+        $this->db->select('subcategoria.*');
+        $this->db->from('subcategoria');
+        $this->db->join('categoria', 'categoria.idCategoria = subcategoria.idCategoria', 'left');
+        $this->db->where('subcategoria.idCategoria', $idCategoria);
+        $this->db->where('subcategoria.status', 1);
+        $this->db->where('categoria.tipo', 'ENTRADA');
+        $this->db->order_by('subcategoria.nomeSubCategoria', 'asc');
         $query = $this->db->get();
         return $query->result();
     }
