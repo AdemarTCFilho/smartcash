@@ -183,6 +183,17 @@
                     </li>
                 <?php } ?>
 
+                <?php if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vDreGerencial')) { ?>
+                    <li class="<?php if (isset($menuDreImportacao)) {
+                        echo 'active';
+                    }; ?>">
+                        <a class="tip-bottom" title="" href="<?= site_url('dreImportacao') ?>"><i class='fa fa-circle iconX' style="font-size:10px;color:#201a61;"></i>
+                            <span class="title">DRE Importação</span>
+                            <span class="title-tooltip">DRE Importação</span>
+                        </a>
+                    </li>
+                <?php } ?>
+
                  <?php if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vBoardExecutivo')) { ?>
                     <li class="<?php if (isset($menuBoardExecutivo)) {
                         echo 'active';

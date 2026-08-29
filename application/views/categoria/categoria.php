@@ -106,6 +106,7 @@
                     <tr>
                         <th>NOME</th>
                         <th>CATEGORIA</th>
+                        <th>TIPO</th>
                         <th>STATUS</th>
                         <th>AÇÃO</th>
                     </tr>

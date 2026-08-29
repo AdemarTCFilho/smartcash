@@ -126,6 +126,47 @@ body {
     font-size:11px;
 }
 
+.dataTables_wrapper {
+    padding: 10px;
+}
+
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_length {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+}
+
+.dataTables_wrapper .dataTables_filter {
+    float: right;
+    text-align: right;
+    color: var(--muted);
+}
+
+.dataTables_wrapper .dataTables_length {
+    float: left;
+    color: var(--muted);
+}
+
+.dataTables_wrapper::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+    background: #101641;
+    border: 1px solid #202a68;
+    border-radius: 6px;
+    color: #fff;
+    padding: 4px 8px;
+}
+
+.dataTables_wrapper .dataTables_info {
+    color: var(--muted);
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -151,6 +192,40 @@ th {
     background: #331731;
     color: #ff7180;
     border: 1px solid #ff7180 !important;
+}
+
+.select2-container--default .select2-selection--single {
+    background-color: #101641 !important;
+    border: 1px solid #202a68 !important;
+    border-radius: 6px !important;
+    height: 35px !important;
+    color: #fff !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #fff !important;
+    line-height: 33px !important;
+    padding-left: 10px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 33px !important;
+}
+
+.select2-dropdown {
+    background-color: #101641 !important;
+    border: 1px solid #202a68 !important;
+    color: #fff !important;
+}
+
+.select2-results__option--highlighted {
+    background-color: #6b63ff !important;
+}
+
+.select2-search__field {
+    background-color: #0b1030 !important;
+    color: #fff !important;
+    border: 1px solid #202a68 !important;
 }
 
 .status-ativo {

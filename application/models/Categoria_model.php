@@ -81,7 +81,7 @@ class Categoria_model extends CI_Model
 
     public function getAllSubCategorias()
     {
-        $this->db->select('subcategoria.*, categoria.nomeCategoria');
+        $this->db->select('subcategoria.*, categoria.nomeCategoria, categoria.tipo');
         $this->db->from('subcategoria');
         $this->db->join('categoria', 'categoria.idCategoria = subcategoria.idCategoria', 'left');
         $this->db->order_by('subcategoria.nomeSubCategoria', 'asc');

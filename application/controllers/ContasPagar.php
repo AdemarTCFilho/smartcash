@@ -61,6 +61,7 @@ class ContasPagar extends MY_Controller
             'vencimento' => $vencimento,
             'unidade' => $this->input->post('unidade'),
             'idCategoria' => $this->input->post('idCategoria') ?: null,
+            'idSubCategoria' => $this->input->post('idSubCategoria') ?: null,
             'observacoes' => $this->input->post('observacoes'),
             'status' => 'pendente',
         ];
@@ -116,6 +117,13 @@ class ContasPagar extends MY_Controller
     {
         $categorias = $this->contasPagar_model->getAllCategorias();
         echo json_encode(['data' => $categorias]);
+    }
+
+    public function listarSubCategoriasPorCategoria()
+    {
+        $idCategoria = $this->input->get('idCategoria');
+        $subcategorias = $this->contasPagar_model->getSubCategoriasPorCategoria($idCategoria);
+        echo json_encode(['data' => $subcategorias]);
     }
 
     public function getDadosDashboard()

@@ -3,6 +3,10 @@ function openTab(tabId) {
     document.querySelectorAll('.btn').forEach(el => el.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
     event.target.classList.add('active');
+
+    if ($.fn.DataTable) {
+        $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+    }
 }
 
 function statusBadge(status) {
@@ -59,11 +63,25 @@ function carregarCategorias() {
             res.data.forEach(c => {
                 opts += '<option value="' + c.idCategoria + '">' + c.nomeCategoria + '</option>';
             });
-            document.getElementById('selectCategoriaSub').innerHTML = opts;
+            let selectSub = document.getElementById('selectCategoriaSub');
+            selectSub.innerHTML = opts;
+
+            if ($(selectSub).data('select2')) $(selectSub).select2('destroy');
+            $(selectSub).select2({
+                width: '100%',
+                placeholder: 'Selecione uma categoria',
+                allowClear: true,
+            });
         });
 }
 
 function carregarSubCategorias() {
+    let tabelaEl = document.querySelector('#tabelaSubCategorias').closest('table');
+
+    if ($.fn.DataTable.isDataTable(tabelaEl)) {
+        $(tabelaEl).DataTable().destroy();
+    }
+
     fetch(siteUrl + 'categoria/listarSubCategorias')
         .then(res => res.json())
         .then(res => {
@@ -73,6 +91,7 @@ function carregarSubCategorias() {
                 html += '<tr>' +
                     '<td>' + s.nomeSubCategoria + '</td>' +
                     '<td>' + s.nomeCategoria + '</td>' +
+                    '<td>' + tipoBadge(s.tipo) + '</td>' +
                     '<td>' + statusHtml + '</td>' +
                     '<td>' +
                         "<span class='edit' onclick='editarSubCategoria(" + s.idSubCategoria + ")' title='Editar SubCategoria'>✎</span>" +
@@ -81,6 +100,15 @@ function carregarSubCategorias() {
                 '</tr>';
             });
             document.getElementById('tabelaSubCategorias').innerHTML = html;
+
+            $(tabelaEl).DataTable({
+                "ordering": false,
+                "pageLength": 10,
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+                "language": {
+                    "url": baseUrl + "assets/js/dataTable_pt-br.json"
+                }
+            });
         });
 }
 
@@ -110,6 +138,7 @@ function salvarSubCategoria() {
             if (res.success) {
                 Swal.fire('Sucesso', res.message, 'success');
                 form.reset();
+                $(form.querySelector('[name="idCategoria"]')).val('').trigger('change');
                 carregarSubCategorias();
             } else {
                 Swal.fire('Erro', res.message, 'error');
@@ -182,7 +211,7 @@ function editarSubCategoria(id) {
         .then(data => {
             let form = document.getElementById('formSubCategoria');
             form.querySelector('[name="id"]').value = data.idSubCategoria;
-            form.querySelector('[name="idCategoria"]').value = data.idCategoria;
+            $(form.querySelector('[name="idCategoria"]')).val(String(data.idCategoria)).trigger('change');
             form.querySelector('[name="nomeSubCategoria"]').value = data.nomeSubCategoria;
             form.querySelector('[name="status"]').value = data.status;
             openTab('tab-subcategoria');

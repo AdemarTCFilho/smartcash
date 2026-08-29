@@ -53,7 +53,8 @@ class ContasPagar_model extends CI_Model
             empresa.nomeEmpresa,
             unidade.nomeUnidade,
             sub_unidade.nomeSubUnidade,
-            categoria.nomeCategoria
+            categoria.nomeCategoria,
+            subcategoria.nomeSubCategoria
         ');
         $this->db->from('contas_pagar');
         $this->db->join('clientes', 'clientes.idClientes = contas_pagar.idClientes', 'left');
@@ -62,6 +63,7 @@ class ContasPagar_model extends CI_Model
         $this->db->join('unidade', 'unidade.idUnidade = contas_pagar.idUnidade', 'left');
         $this->db->join('sub_unidade', 'sub_unidade.idSubUnidade = contas_pagar.idSubUnidade', 'left');
         $this->db->join('categoria', 'categoria.idCategoria = contas_pagar.idCategoria', 'left');
+        $this->db->join('subcategoria', 'subcategoria.idSubCategoria = contas_pagar.idSubCategoria', 'left');
         $this->db->order_by('contas_pagar.dataCriacao', 'desc');
         $query = $this->db->get();
         return $query->result();
@@ -76,7 +78,8 @@ class ContasPagar_model extends CI_Model
             empresa.nomeEmpresa,
             unidade.nomeUnidade,
             sub_unidade.nomeSubUnidade,
-            categoria.nomeCategoria
+            categoria.nomeCategoria,
+            subcategoria.nomeSubCategoria
         ');
         $this->db->from('contas_pagar');
         $this->db->join('clientes', 'clientes.idClientes = contas_pagar.idClientes', 'left');
@@ -85,6 +88,7 @@ class ContasPagar_model extends CI_Model
         $this->db->join('unidade', 'unidade.idUnidade = contas_pagar.idUnidade', 'left');
         $this->db->join('sub_unidade', 'sub_unidade.idSubUnidade = contas_pagar.idSubUnidade', 'left');
         $this->db->join('categoria', 'categoria.idCategoria = contas_pagar.idCategoria', 'left');
+        $this->db->join('subcategoria', 'subcategoria.idSubCategoria = contas_pagar.idSubCategoria', 'left');
         $this->db->where('idContaPagar', $id);
         $this->db->limit(1);
         $query = $this->db->get();
@@ -147,6 +151,17 @@ class ContasPagar_model extends CI_Model
         $this->db->from('categoria');
         $this->db->where('status', 1);
         $this->db->order_by('nomeCategoria', 'asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getSubCategoriasPorCategoria($idCategoria)
+    {
+        $this->db->select('*');
+        $this->db->from('subcategoria');
+        $this->db->where('idCategoria', $idCategoria);
+        $this->db->where('status', 1);
+        $this->db->order_by('nomeSubCategoria', 'asc');
         $query = $this->db->get();
         return $query->result();
     }

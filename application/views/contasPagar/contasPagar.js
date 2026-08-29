@@ -120,6 +120,24 @@ function carregarSubUnidades(unidadeId, selectId) {
         });
 }
 
+function carregarSubCategoriasPorCategoria(idCategoria, selectId) {
+    let select = document.getElementById(selectId);
+    if (!idCategoria) {
+        select.innerHTML = '<option value="">Selecione uma classificação</option>';
+        return Promise.resolve();
+    }
+    select.innerHTML = '<option value="">Carregando...</option>';
+    return fetch(siteUrl + 'contasPagar/listarSubCategoriasPorCategoria?idCategoria=' + idCategoria)
+        .then(res => res.json())
+        .then(res => {
+            let opts = '<option value="">Selecione uma classificação</option>';
+            res.data.forEach(s => {
+                opts += '<option value="' + s.idSubCategoria + '">' + s.nomeSubCategoria + '</option>';
+            });
+            select.innerHTML = opts;
+        });
+}
+
 function carregarDashboard() {
     fetch(siteUrl + 'contasPagar/getDadosDashboard')
         .then(res => res.json())
@@ -249,8 +267,14 @@ function abrirModal(id) {
                         </div>
                         <div>
                             <label class="swal-label">Categoria</label>
-                            <select id="swal-categoria" class="swal-select select2-modal">
+                            <select id="swal-categoria" class="swal-select select2-modal" onchange="carregarSubCategoriaModal(this.value)">
                                 ${categoriasOpts}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="swal-label">Classificação no Plano de Contas</label>
+                            <select id="swal-subcategoria" class="swal-select select2-modal">
+                                <option value="">Selecione uma classificação</option>
                             </select>
                         </div>
                         <div>
@@ -309,6 +333,7 @@ function abrirModal(id) {
                     idUnidade: $('#swal-unidade').val() || '',
                     idSubUnidade: $('#swal-subunidade').val() || '',
                     idCategoria: $('#swal-categoria').val() || '',
+                    idSubCategoria: $('#swal-subcategoria').val() || '',
                     valor: valor,
                     vencimento: vencimento,
                     unidade: '',
@@ -351,6 +376,10 @@ let carregarSubUnidadesModal = function (unidadeId) {
     return carregarSubUnidades(unidadeId, 'swal-subunidade');
 };
 
+let carregarSubCategoriaModal = function (idCategoria) {
+    return carregarSubCategoriasPorCategoria(idCategoria, 'swal-subcategoria');
+};
+
 function carregarDadosEdicao(id, popup) {
     fetch(siteUrl + 'contasPagar/getDados?id=' + id)
         .then(res => res.json())
@@ -358,6 +387,10 @@ function carregarDadosEdicao(id, popup) {
             $('#swal-cliente').val(String(d.idClientes)).trigger('change');
             $('#swal-empresa').val(String(d.idEmpresa)).trigger('change');
             $('#swal-categoria').val(String(d.idCategoria || '')).trigger('change');
+
+            carregarSubCategoriaModal(d.idCategoria).then(() => {
+                $('#swal-subcategoria').val(String(d.idSubCategoria || '')).trigger('change');
+            });
 
             carregarUnidadesModal(d.idEmpresa).then(() => {
                 $('#swal-unidade').val(String(d.idUnidade)).trigger('change');
@@ -406,3 +439,4 @@ function excluirConta(id) {
 
 window.carregarUnidadesModal = carregarUnidadesModal;
 window.carregarSubUnidadesModal = carregarSubUnidadesModal;
+window.carregarSubCategoriaModal = carregarSubCategoriaModal;
