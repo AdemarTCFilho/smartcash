@@ -114,6 +114,34 @@ function pesquisarContasReceber() {
     carregarContasReceber();
 }
 
+function toggleExportarMenu(event) {
+    event.stopPropagation();
+    let menu = document.getElementById('exportarMenu');
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+}
+
+document.addEventListener('click', function () {
+    let menu = document.getElementById('exportarMenu');
+    if (menu) menu.style.display = 'none';
+});
+
+function exportarDados(tipo) {
+    let params = new URLSearchParams();
+    params.append('busca', document.getElementById('filtroBusca').value.trim());
+    params.append('dataDe', document.getElementById('filtroDataDe').value);
+    params.append('dataAte', document.getElementById('filtroDataAte').value);
+    params.append('empresa', document.getElementById('filtroEmpresa').value);
+    params.append('categoria', document.getElementById('filtroCategoria').value);
+    params.append('unidade', document.getElementById('filtroUnidade').value);
+    params.append('subunidade', document.getElementById('filtroSubUnidade').value);
+    params.append('usuario', document.getElementById('filtroUsuario').value);
+
+    let endpoint = tipo === 'pdf' ? 'exportarPdf' : 'exportarExcel';
+    window.open(siteUrl + 'contasReceber/' + endpoint + '?' + params.toString(), '_blank');
+
+    document.getElementById('exportarMenu').style.display = 'none';
+}
+
 function formatMoney(val) {
     if (!val && val !== 0) return 'R$ 0,00';
     return 'R$ ' + parseFloat(val).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

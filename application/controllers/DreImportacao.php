@@ -274,9 +274,9 @@ class DreImportacao extends MY_Controller
 
         $result = $this->DreImportacao_model->atualizarMapeamento(
             $id,
-            $idCategoria !== '' ? $idCategoria : null,
-            $idSubCategoria !== '' ? $idSubCategoria : null,
-            $idUnidade !== '' ? $idUnidade : null
+            $idCategoria,
+            $idSubCategoria,
+            $idUnidade
         );
 
         echo json_encode(['success' => $result !== false, 'message' => $result ? 'Salvo com sucesso!' : 'Erro ao salvar.']);

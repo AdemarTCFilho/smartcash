@@ -13,7 +13,14 @@ class DreGerencial_model extends CI_Model
         $this->db->where("DATE_FORMAT(vencimento, '%Y-%m') = ", $mes);
         if ($idUnidade) $this->db->where('idUnidade', $idUnidade);
         if ($idEmpresa) $this->db->where('idEmpresa', $idEmpresa);
-        return $this->db->get()->row();
+        $principal = $this->db->get()->row();
+
+        $importado = $this->getTotalImportacao('C', $mes, $idUnidade, $idEmpresa);
+
+        return (object) [
+            'total' => (float) $principal->total + (float) $importado->total,
+            'qtd' => (int) $principal->qtd + (int) $importado->qtd,
+        ];
     }
 
     public function getTotalDespesas($mes, $idUnidade = null, $idEmpresa = null)
@@ -23,7 +30,14 @@ class DreGerencial_model extends CI_Model
         $this->db->where("DATE_FORMAT(vencimento, '%Y-%m') = ", $mes);
         if ($idUnidade) $this->db->where('idUnidade', $idUnidade);
         if ($idEmpresa) $this->db->where('idEmpresa', $idEmpresa);
-        return $this->db->get()->row();
+        $principal = $this->db->get()->row();
+
+        $importado = $this->getTotalImportacao('D', $mes, $idUnidade, $idEmpresa);
+
+        return (object) [
+            'total' => (float) $principal->total + (float) $importado->total,
+            'qtd' => (int) $principal->qtd + (int) $importado->qtd,
+        ];
     }
 
     public function getReceitasPorCategoria($mes, $idUnidade = null, $idEmpresa = null)
@@ -35,8 +49,11 @@ class DreGerencial_model extends CI_Model
         if ($idUnidade) $this->db->where('cr.idUnidade', $idUnidade);
         if ($idEmpresa) $this->db->where('cr.idEmpresa', $idEmpresa);
         $this->db->group_by('c.idCategoria, c.nomeCategoria');
-        $this->db->order_by('total', 'desc');
-        return $this->db->get()->result();
+        $principal = $this->db->get()->result();
+
+        $importado = $this->getPorCategoriaImportacao('C', $mes, $idUnidade, $idEmpresa);
+
+        return $this->mesclarPorCategoria($principal, $importado);
     }
 
     public function getDespesasPorCategoria($mes, $idUnidade = null, $idEmpresa = null)
@@ -48,8 +65,91 @@ class DreGerencial_model extends CI_Model
         if ($idUnidade) $this->db->where('cp.idUnidade', $idUnidade);
         if ($idEmpresa) $this->db->where('cp.idEmpresa', $idEmpresa);
         $this->db->group_by('c.idCategoria, c.nomeCategoria');
-        $this->db->order_by('total', 'desc');
+        $principal = $this->db->get()->result();
+
+        $importado = $this->getPorCategoriaImportacao('D', $mes, $idUnidade, $idEmpresa);
+
+        return $this->mesclarPorCategoria($principal, $importado);
+    }
+
+    private function getTotalImportacao($status, $mes, $idUnidade = null, $idEmpresa = null)
+    {
+        $tipo = $status === 'C' ? 'ENTRADA' : 'SAIDA';
+
+        $this->db->select('COALESCE(SUM(di.valor), 0) as total, COUNT(*) as qtd');
+        $this->db->from('dre_importacao di');
+        $this->db->join('categoria c', 'c.idCategoria = di.idCategoria');
+        $this->db->where('di.status', $status);
+        $this->db->where('c.tipo', $tipo);
+        $this->db->where("DATE_FORMAT(di.data, '%Y-%m') = ", $mes);
+        $this->filtrarImportacaoCompleta();
+        if ($idUnidade) $this->db->where('di.idUnidade', $idUnidade);
+        if ($idEmpresa) {
+            $this->db->join('unidade u', 'u.idUnidade = di.idUnidade');
+            $this->db->where('u.idEmpresa', $idEmpresa);
+        }
+        return $this->db->get()->row();
+    }
+
+    private function getPorCategoriaImportacao($status, $mes, $idUnidade = null, $idEmpresa = null)
+    {
+        $tipo = $status === 'C' ? 'ENTRADA' : 'SAIDA';
+
+        $this->db->select('c.idCategoria, c.nomeCategoria, COALESCE(SUM(di.valor), 0) as total, COUNT(*) as qtd');
+        $this->db->from('dre_importacao di');
+        $this->db->join('categoria c', 'c.idCategoria = di.idCategoria');
+        $this->db->where('di.status', $status);
+        $this->db->where('c.tipo', $tipo);
+        $this->db->where("DATE_FORMAT(di.data, '%Y-%m') = ", $mes);
+        $this->filtrarImportacaoCompleta();
+        if ($idUnidade) $this->db->where('di.idUnidade', $idUnidade);
+        if ($idEmpresa) {
+            $this->db->join('unidade u', 'u.idUnidade = di.idUnidade');
+            $this->db->where('u.idEmpresa', $idEmpresa);
+        }
+        $this->db->group_by('c.idCategoria, c.nomeCategoria');
         return $this->db->get()->result();
+    }
+
+    private function filtrarImportacaoCompleta()
+    {
+        // Colunas "DESPESAS" e "CENTRO DE CUSTO" da tela de DRE Importação são, na
+        // prática, os selects de mapeamento de Subcategoria (Despesas) e Unidade
+        // (Centro de Custo) — idCategoria já é exigido via o INNER JOIN com categoria.
+        $this->db->where('di.idSubCategoria IS NOT NULL');
+        $this->db->where('di.idUnidade IS NOT NULL');
+    }
+
+    private function mesclarPorCategoria($listaPrincipal, $listaImportada)
+    {
+        $mapa = [];
+        foreach ($listaPrincipal as $item) {
+            $mapa[$item->idCategoria] = (object) [
+                'idCategoria' => $item->idCategoria,
+                'nomeCategoria' => $item->nomeCategoria,
+                'total' => (float) $item->total,
+                'qtd' => (int) $item->qtd,
+            ];
+        }
+        foreach ($listaImportada as $item) {
+            if (isset($mapa[$item->idCategoria])) {
+                $mapa[$item->idCategoria]->total += (float) $item->total;
+                $mapa[$item->idCategoria]->qtd += (int) $item->qtd;
+            } else {
+                $mapa[$item->idCategoria] = (object) [
+                    'idCategoria' => $item->idCategoria,
+                    'nomeCategoria' => $item->nomeCategoria,
+                    'total' => (float) $item->total,
+                    'qtd' => (int) $item->qtd,
+                ];
+            }
+        }
+
+        $resultado = array_values($mapa);
+        usort($resultado, function ($a, $b) {
+            return $b->total <=> $a->total;
+        });
+        return $resultado;
     }
 
     public function getComparativo($mes, $idUnidade = null, $idEmpresa = null)

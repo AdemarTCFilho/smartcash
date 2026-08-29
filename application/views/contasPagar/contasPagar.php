@@ -28,6 +28,15 @@
                 <i class="fa fa-filter" aria-hidden="true"></i>&nbsp; Filtro avançado
             </button>
             <button type="button" class="btn-pesquisar" onclick="pesquisarContasPagar()">Pesquisar</button>
+            <div class="dropdown-exportar">
+                <button type="button" class="btn-exportar" onclick="toggleExportarMenu(event)">
+                    Exportar <i class="fa fa-caret-down" aria-hidden="true"></i>
+                </button>
+                <div class="exportar-menu" id="exportarMenu" style="display:none;">
+                    <a href="#" onclick="exportarDados('pdf'); return false;"><i class="fa fa-file-pdf-o" aria-hidden="true" style="color:#ff5b67;"></i> Exportar em PDF</a>
+                    <a href="#" onclick="exportarDados('excel'); return false;"><i class="fa fa-file-excel-o" aria-hidden="true" style="color:#00ff9d;"></i> Exportar em EXCEL</a>
+                </div>
+            </div>
         </div>
         <div class="filtro-avancado" id="filtroAvancado" style="display:none;">
             <select class="filtro-select select2-filtro" id="filtroEmpresa">

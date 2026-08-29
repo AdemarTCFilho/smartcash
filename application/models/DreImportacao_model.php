@@ -39,15 +39,16 @@ class DreImportacao_model extends CI_Model
 
     public function atualizarMapeamento($id, $idCategoria, $idSubCategoria, $idUnidade)
     {
+        // null = campo não enviado (não mexer); '' = enviado vazio (limpar para NULL no banco)
         $data = [];
         if ($idCategoria !== null) {
-            $data['idCategoria'] = $idCategoria;
+            $data['idCategoria'] = $idCategoria !== '' ? $idCategoria : null;
         }
         if ($idSubCategoria !== null) {
-            $data['idSubCategoria'] = $idSubCategoria;
+            $data['idSubCategoria'] = $idSubCategoria !== '' ? $idSubCategoria : null;
         }
         if ($idUnidade !== null) {
-            $data['idUnidade'] = $idUnidade;
+            $data['idUnidade'] = $idUnidade !== '' ? $idUnidade : null;
         }
         if (empty($data)) {
             return false;

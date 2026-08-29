@@ -268,6 +268,19 @@
     height: 33px !important;
 }
 
+.select2-container--default .select2-selection--single .select2-selection__clear {
+    color: var(--dre-muted);
+    font-size: 16px;
+    font-weight: normal;
+    margin-right: 22px;
+    line-height: 42px;
+    cursor: pointer;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__clear:hover {
+    color: var(--dre-red);
+}
+
 .select2-dropdown {
     background-color: #101641 !important;
     border: 1px solid #202a68 !important;

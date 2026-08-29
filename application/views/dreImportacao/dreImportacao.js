@@ -243,15 +243,15 @@
 
         $('.dre-select2-categoria').on('change', function () {
             var id = $(this).data('id');
-            var idSubCategoria = $(this).val();
-            var idCategoria = idSubCategoria ? (categoriaMap[idSubCategoria] || null) : null;
-            salvarMapeamento(id, idCategoria, idSubCategoria, null);
+            var idSubCategoria = $(this).val() || '';
+            var idCategoria = idSubCategoria ? (categoriaMap[idSubCategoria] || '') : '';
+            salvarMapeamento(id, idCategoria, idSubCategoria, undefined);
         });
 
         $('.dre-select2-unidade').on('change', function () {
             var id = $(this).data('id');
-            var idUnidade = $(this).val();
-            salvarMapeamento(id, null, null, idUnidade);
+            var idUnidade = $(this).val() || '';
+            salvarMapeamento(id, undefined, undefined, idUnidade);
         });
     }
 
